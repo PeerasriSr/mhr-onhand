@@ -1,0 +1,70 @@
+<nav class="navbar navbar-light bg-white shadow pl-0 pr-0 pt-1 pb-1">
+  <div class="container-fluid">
+    <div id="containerHead">
+      <!-- <img src="/assets/onhand-logo.png">         -->
+      <img src="/OnHand/assets/onhand-logo.png" />
+      <P class="ml-1 h5" style="color: black">{{ depName }}</P>
+    </div>
+    <div id="containerHead" style="height: 31px" class="pt-1">
+      <div class="mr-3 {{ page == 'Inventory' ? 'select' : '' }}">
+        <a href="#Inventory" (click)="selectPage('Inventory')">
+          <i class="fa fa-h-square" aria-hidden="true"></i> ห้องยา</a
+        >
+      </div>
+      <div class="mr-3 {{ page == 'Applicant' ? 'select' : '' }}">
+        <a href="#Applicant" (click)="selectPage('Applicant')">
+          <i class="fa fa-paper-plane" aria-hidden="true"></i>
+          ขอยา</a
+        >
+      </div>
+      <div
+        *ngIf="id.substr(0, 1) == 'P' || id.substr(0, 1) == 'C'"
+        class="mr-3 {{ page == 'Approves' ? 'select' : '' }}"
+      >
+        <span matBadge="{{ numBadge }}" *ngIf="numBadge > 0">
+          <a href="#Approves" (click)="selectPage('Approves')">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+            ให้ยา
+          </a>
+        </span>
+        <a
+          href="#Approves"
+          (click)="selectPage('Approves')"
+          *ngIf="numBadge == 0"
+        >
+          <i class="fa fa-envelope" aria-hidden="true"></i> ให้ยา
+        </a>
+      </div>
+      <div class="mr-3 {{ page == 'SubStock' ? 'select' : '' }}">
+        <a href="#SubStock" (click)="selectPage('SubStock')"
+          ><i class="fa fa-archive" aria-hidden="true"></i> คลังย่อย</a
+        >
+      </div>
+    </div>
+    <form
+      [formGroup]="searchGroup"
+      (ngSubmit)="searchGroup.valid ? submitISearch() : ''"
+    >
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="ค้นหายา : รหัสยา/ ชื่อยา"
+          formControlName="key"
+        />
+        <button type="submit" class="btn btn-primary form-group btn-sm">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+    <div id="containerHead">
+      <p class="h5 mr-1">
+        <i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ user }}
+      </p>
+      <button type="button" class="btn btn-danger btn-sm" (click)="LogOut()">
+        <i class="fa fa-sign-out" aria-hidden="true"></i> ออกจากระบบ
+      </button>
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

@@ -1,0 +1,113 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat, repeat;
+  background-size: cover;
+  background-image: url("/OnHand/assets/onhand-bg.jpg");
+  // background-image: url("/assets/onhand-bg.jpg");
+}
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+table {
+  width: 100%;
+  height: 100%;
+  // border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+td {
+  max-width: 500px;
+}
+
+tr:hover {
+  background-color: #EAEFF2;
+}
+
+.highlightTableColor {
+  background-color: #d9edf7;
+}
+// tr {
+//   background-color: #EAEFF2 !important;
+// }
+// tr:nth-child(even) {
+//   background-color: #ffffff !important;
+// }
+
+.mat-sort-header-container {
+  justify-content: center;
+}
+
+th.mat-header-cell {
+  text-align: center !important;
+  background-color: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+td.mat-cell {
+  // border-bottom-style: none !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
+td.mat-cell:first-of-type,
+th.mat-header-cell:first-of-type {
+  padding-left: 8px !important;
+}
+
+td.mat-cell:last-of-type,
+th.mat-header-cell:last-of-type {
+  padding-right: 8px !important;
+}
+
+// .mat-row:hover .mat-cell {
+//   text-shadow: 2px 2px #e0e0e0;
+// }
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+  // background-color: rgba(255, 255, 255, 0.7);
+  // background-color: #f2f2f2;
+}
+
+.card-body {
+  padding: 0 !important;
+  // background-color: #ffffff;
+  // border-radius: 10px;
+}
+
+.mat-paginator {
+  margin: 0.3em;
+}
+
+.num {
+  font-weight: bold;
+}
+
+.display {
+  width: 99.6%;
+}
+
+// .mat-checkbox-ripple .mat-ripple-element,
+// .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+//   background-color: #dc3545 !important;
+// }

@@ -1,0 +1,28 @@
+.have {
+  color: #000000;
+  font-weight: bold;
+}
+
+.no {
+  color: #808080;
+}
+
+button {
+  border: none;
+}
+
+.isActive {
+  color: #ffffff;
+  background-color: #198754;
+}
+.noneActice {
+  background-color: #adb5bd;
+}
+
+#containerHead button,
+#containerHead img,
+#containerHead p,
+#containerHead div,
+#containerHead label {
+  display: inline;
+}
