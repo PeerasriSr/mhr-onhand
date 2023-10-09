@@ -1,0 +1,1116 @@
+<div class="container-fluid">
+  <div class="card">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+      <mat-tab label="ทั้งหมด">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-form-field" style="float: left">
+                <!-- <mat-label>เลือกช่วงวันที่</mat-label> -->
+                <mat-date-range-input
+                  [formGroup]="campaignAll"
+                  [rangePicker]="campaignAllPicker"
+                  [comparisonStart]="campaignAll.value.start"
+                  [comparisonEnd]="campaignAll.value.end"
+                >
+                  <input
+                    matStartDate
+                    placeholder="วันที่ เริ่มต้น"
+                    formControlName="start"
+                    (dateChange)="startChangeAll($event)"
+                  />
+                  <input
+                    matEndDate
+                    placeholder="สิ้นสุด"
+                    formControlName="end"
+                    (dateChange)="endChangeAll($event)"
+                  />
+                </mat-date-range-input>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="campaignAllPicker"
+                ></mat-datepicker-toggle>
+                <mat-date-range-picker
+                  #campaignAllPicker
+                ></mat-date-range-picker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div [hidden]="listAll.length > 0">
+            <div class="center">
+              <h2 style="color: #adb5bd">
+                <i class="fas fa-exclamation-circle"></i>
+                ไม่พบข้อมูลจากวันที่ ที่ท่านเลือก
+              </h2>
+            </div>
+          </div>
+          <div [hidden]="listAll.length == 0">
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataAll"
+                #sortAll="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+                matTableExporter
+                #exporterAll="matTableExporter"
+              >
+                <ng-container matColumnDef="vDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    วันที่
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.vDate }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>HN</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.patientNo }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อคนไข้
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.patientName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientSex">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>เพศ</th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.patientSex }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="age">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    อายุ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.age }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientAdd">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ภูมิลำเนา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.patientAdd }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientRight">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    สิทธิการรักษา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.patientRight }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="drugName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    จำนวน
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    <b>{{ element.amount }}</b> {{ element.package }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="reasonName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    หมายเหตุที่ยาเหลือ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.reasonName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="docName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    แพทย์
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.docName }}
+                    {{ element.docLName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="deptEn">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    คลินิก
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.deptEn }} -
+                    {{ element.deptTh }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="phar">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    เภสัช
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.phar }}
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayAll; sticky: true"
+                ></tr>
+                <tr mat-row *matRowDef="let row; columns: displayAll"></tr>
+              </table>
+            </section>
+            <div class="row">
+              <div class="col">
+                <mat-paginator
+                  #paginatorAll="matPaginator"
+                  style="display: flex; justify-content: center"
+                  [length]="10"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[10, 25, 50]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+              <!-- <div class="col right h6 mt-3 me-2 space2">
+                รวม
+                <u>{{ medAmount }}</u> หน่วย <u>{{ medCost }}</u> บาท
+              </div> -->
+              <div class="col-2 right">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary mt-2"
+                  (click)="
+                    exporterAll.exportTable('xlsx', {
+                      fileName: 'รายงานยาคืน',
+                      sheet: 'sheet1',
+                      Props: { Author: 'Talha' }
+                    })
+                  "
+                >
+                  <i class="far fa-file-excel"></i> ส่งออกไฟล์
+                </button>
+              </div>
+            </div>
+          </div>
+        </div></mat-tab
+      >
+      <mat-tab label="คนไข้">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-2">
+              <mat-form-field>
+                <mat-label>ค้นหา</mat-label>
+                <input
+                  matInput
+                  #swiperHN
+                  (keyup.enter)="getPatient(swiperHN.value)"
+                />
+                <div matSuffix style="font-size: 17.5px" *ngIf="swiperHN.value">
+                  <i
+                    class="fas fa-times edit"
+                    (click)="refesh(); swiperHN.value = ''"
+                  ></i>
+                </div>
+              </mat-form-field>
+            </div>
+            <div class="col" [hidden]="listCost.length == 0">
+              <div class="h5 space mt-3">
+                <i class="fas fa-user me-2"></i> ชื่อ - สกุล
+                <u> {{ patientName }} </u> อายุ <u> {{ patientAge }} </u>
+              </div>
+            </div>
+          </div>
+          <div [hidden]="listPatient.length == 0 || listCost.length > 0">
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataPatient"
+                #sortPatient="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ลำดับ
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>HN</th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.patientNo }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อ - สกุล
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.patientName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientAge">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    อายุ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.patientAge }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="option">
+                  <th mat-header-cell *matHeaderCellDef>เลือก</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    <i
+                      class="fas fa-angle-double-right edit"
+                      (click)="getCost(element)"
+                    ></i>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayPatient; sticky: true"
+                ></tr>
+                <tr mat-row *matRowDef="let row; columns: displayPatient"></tr>
+              </table>
+            </section>
+            <div class="row">
+              <div class="col">
+                <mat-paginator
+                  #paginatorPatient="matPaginator"
+                  style="display: flex; justify-content: center"
+                  [length]="10"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[10, 25, 50]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
+          <div [hidden]="listCost.length == 0">
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataCost"
+                #sortPatient="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="desc"
+                matTableExporter
+                #exporterPatient="matTableExporter"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ลำดับ
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Vdate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    วันที่
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.Vdate }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="numItem">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Item (รายการ)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.numItem }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Cost (ราคา)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.cost }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="option">
+                  <th mat-header-cell *matHeaderCellDef>รายละเอียด</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    <i
+                      class="fas fa-search edit"
+                      (click)="viewDetail(element)"
+                    ></i>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayCost; sticky: true"
+                ></tr>
+                <tr mat-row *matRowDef="let row; columns: displayCost"></tr>
+              </table>
+            </section>
+
+            <div class="row">
+              <div class="col-5">
+                <mat-paginator
+                  #paginatorCost="matPaginator"
+                  style="display: flex; justify-content: center"
+                  [length]="10"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[10, 25, 50]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+
+              <div class="col right h6 mt-3 me-2 space2">
+                รวม
+                <u>{{ sumItem }}</u> รายการ <u>{{ sumCost }}</u> บาท
+              </div>
+              <div class="col right">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary mr-2"
+                  (click)="clear()"
+                >
+                  <i class="fas fa-undo"></i> ย้อนกลับ
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  (click)="
+                    exporterPatient.exportTable('xlsx', {
+                      fileName: 'ยาคืน คนไข้ ' + patientName,
+                      sheet: 'sheet1',
+                      Props: { Author: 'Talha' }
+                    })
+                  "
+                >
+                  <i class="far fa-file-excel"></i> ส่งออกไฟล์
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="แพทย์">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-form-field" style="float: left">
+                <!-- <mat-label>เลือกช่วงวันที่</mat-label> -->
+                <mat-date-range-input
+                  [formGroup]="campaignDoc"
+                  [rangePicker]="campaignDocPicker"
+                  [comparisonStart]="campaignDoc.value.start"
+                  [comparisonEnd]="campaignDoc.value.end"
+                >
+                  <input
+                    matStartDate
+                    placeholder="วันที่ เริ่มต้น"
+                    formControlName="start"
+                    (dateChange)="startChangeDoc($event)"
+                  />
+                  <input
+                    matEndDate
+                    placeholder="สิ้นสุด"
+                    formControlName="end"
+                    (dateChange)="endChangeDoc($event)"
+                  />
+                </mat-date-range-input>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="campaignDocPicker"
+                ></mat-datepicker-toggle>
+                <mat-date-range-picker
+                  #campaignDocPicker
+                ></mat-date-range-picker>
+              </mat-form-field>
+              <mat-form-field class="ms-4">
+                <mat-label>แพทย์</mat-label>
+                <select matNativeControl (change)="selectDocc($event)">
+                  <option
+                    *ngFor="let x of listDocc"
+                    [value]="x.docCode + ',' + x.docLName"
+                  >
+                    {{ x.docName }}
+                    {{ x.docLName }}
+                  </option>
+                </select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div [hidden]="listDocReport.length > 0">
+            <div class="center">
+              <h2 style="color: #adb5bd">
+                <i class="fas fa-exclamation-circle"></i>
+                ไม่พบข้อมูลจากแพทย์ที่ท่านเลือก
+              </h2>
+            </div>
+          </div>
+          <div [hidden]="listDocReport.length == 0">
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataDocReport"
+                #sortDocReport="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+                matTableExporter
+                #exporterDoc="matTableExporter"
+              >
+                <ng-container matColumnDef="vDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    วันที่
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.vDate }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientNo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>HN</th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.patientNo }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อ - สกุล
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.patientName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientDB">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    อายุ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.patientDB }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Item (รายการ)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.item }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Unit (หน่วย)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.amount }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Cost (รวม)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.cost }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="option">
+                  <th mat-header-cell *matHeaderCellDef>รายละเอียด</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    <i
+                      class="fas fa-search edit"
+                      (click)="viewDetail(element)"
+                    ></i>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayDocReport; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayDocReport"
+                ></tr>
+              </table>
+            </section>
+            <div class="row">
+              <div class="col">
+                <mat-paginator
+                  #paginatorDocReport="matPaginator"
+                  style="display: flex; justify-content: center"
+                  [length]="10"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[10, 25, 50]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+              <div class="col right h6 mt-3 me-2 space2">
+                รวม
+                <u>{{ docItem }}</u> รายการ <u>{{ docAmount }}</u> หน่วย
+                <u>{{ docCost }}</u> บาท
+              </div>
+              <div class="col-2 right">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary mt-2"
+                  (click)="
+                    exporterDoc.exportTable('xlsx', {
+                      fileName: 'ยาคืน แพทย์ ' + docName,
+                      sheet: 'sheet1',
+                      Props: { Author: 'Talha' }
+                    })
+                  "
+                >
+                  <i class="far fa-file-excel"></i> ส่งออกไฟล์
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="คลินิก">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-form-field" style="float: left">
+                <!-- <mat-label>เลือกช่วงวันที่</mat-label> -->
+                <mat-date-range-input
+                  [formGroup]="campaignDep"
+                  [rangePicker]="campaignDepPicker"
+                  [comparisonStart]="campaignDep.value.start"
+                  [comparisonEnd]="campaignDep.value.end"
+                >
+                  <input
+                    matStartDate
+                    placeholder="วันที่ เริ่มต้น"
+                    formControlName="start"
+                    (dateChange)="startChangeDep($event)"
+                  />
+                  <input
+                    matEndDate
+                    placeholder="สิ้นสุด"
+                    formControlName="end"
+                    (dateChange)="endChangeDep($event)"
+                  />
+                </mat-date-range-input>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="campaignDepPicker"
+                ></mat-datepicker-toggle>
+                <mat-date-range-picker
+                  #campaignDepPicker
+                ></mat-date-range-picker>
+              </mat-form-field>
+              <mat-form-field class="ms-4" [style.width.px]="300">
+                <mat-label>คลินิก</mat-label>
+                <select matNativeControl (change)="selectDept($event)">
+                  <option
+                    *ngFor="let x of listDept"
+                    [value]="x.deptCode + ',' + x.deptEn"
+                  >
+                    {{ x.deptEn }} -
+                    {{ x.deptTh }}
+                  </option>
+                </select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div [hidden]="listDeptReport.length > 0">
+            <div class="center">
+              <h2 style="color: #adb5bd">
+                <i class="fas fa-exclamation-circle"></i>
+                ไม่พบข้อมูลจากคลินิกที่ท่านเลือก
+              </h2>
+            </div>
+          </div>
+          <div [hidden]="listDeptReport.length == 0">
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataDeptReport"
+                #sortNV="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+                matTableExporter
+                #exporterDept="matTableExporter"
+              >
+                <ng-container matColumnDef="vDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    วันที่
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.vDate }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="docName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    แพทย์
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.docName }} {{ element.docLName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Item (รายการ)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.item }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Unit (หน่วย)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.amount }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Cost (รวม)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.cost }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="option">
+                  <th mat-header-cell *matHeaderCellDef>รายละเอียด</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    <i
+                      class="fas fa-search edit"
+                      (click)="viewDept(element)"
+                    ></i>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayDeptReport; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayDeptReport"
+                ></tr>
+              </table>
+            </section>
+            <div class="row">
+              <div class="col">
+                <mat-paginator
+                  #paginatorDeptReport="matPaginator"
+                  style="display: flex; justify-content: center"
+                  [length]="10"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[10, 25, 50]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+              <div class="col right h6 mt-3 me-2 space2">
+                รวม
+                <u>{{ deptItem }}</u> รายการ <u>{{ deptAmount }}</u> หน่วย
+                <u>{{ deptCost }}</u> บาท
+              </div>
+              <div class="col-2 right">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary mt-2"
+                  (click)="
+                    exporterDept.exportTable('xlsx', {
+                      fileName: 'ยาคืน คลินิก ' + deptName,
+                      sheet: 'sheet1',
+                      Props: { Author: 'Talha' }
+                    })
+                  "
+                >
+                  <i class="far fa-file-excel"></i> ส่งออกไฟล์
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="ยา">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-form-field" style="float: left">
+                <!-- <mat-label>เลือกช่วงวันที่</mat-label> -->
+                <mat-date-range-input
+                  [formGroup]="campaignMed"
+                  [rangePicker]="campaignMedPicker"
+                  [comparisonStart]="campaignMed.value.start"
+                  [comparisonEnd]="campaignMed.value.end"
+                >
+                  <input
+                    matStartDate
+                    placeholder="วันที่ เริ่มต้น"
+                    formControlName="start"
+                    (dateChange)="startChangeMed($event)"
+                  />
+                  <input
+                    matEndDate
+                    placeholder="สิ้นสุด"
+                    formControlName="end"
+                    (dateChange)="endChangeMed($event)"
+                  />
+                </mat-date-range-input>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="campaignMedPicker"
+                ></mat-datepicker-toggle>
+                <mat-date-range-picker
+                  #campaignMedPicker
+                ></mat-date-range-picker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div [hidden]="listMedReport.length > 0">
+            <div class="center">
+              <h2 style="color: #adb5bd">
+                <i class="fas fa-exclamation-circle"></i>
+                ไม่พบข้อมูลจากวันที่ ที่ท่านเลือก
+              </h2>
+            </div>
+          </div>
+          <div [hidden]="listMedReport.length == 0">
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataMedReport"
+                #sortMedReport="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+                matTableExporter
+                #exporterMed="matTableExporter"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ลำดับ
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Unit (หน่วย)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.amount }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Cost (รวม)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.cost }}
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="option">
+                  <th mat-header-cell *matHeaderCellDef>รายละเอียด</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    <i
+                      class="fas fa-search edit"
+                      (click)="viewDept(element)"
+                    ></i>
+                  </td>
+                </ng-container> -->
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayMedReport; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayMedReport"
+                ></tr>
+              </table>
+            </section>
+            <div class="row">
+              <div class="col">
+                <mat-paginator
+                  #paginatorMedReport="matPaginator"
+                  style="display: flex; justify-content: center"
+                  [length]="10"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[10, 25, 50]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+              <div class="col right h6 mt-3 me-2 space2">
+                รวม
+                <u>{{ medAmount }}</u> หน่วย <u>{{ medCost }}</u> บาท
+              </div>
+              <div class="col-2 right">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary mt-2"
+                  (click)="
+                    exporterMed.exportTable('xlsx', {
+                      fileName: 'ยาคืน รายการยา',
+                      sheet: 'sheet1',
+                      Props: { Author: 'Talha' }
+                    })
+                  "
+                >
+                  <i class="far fa-file-excel"></i> ส่งออกไฟล์
+                </button>
+              </div>
+            </div>
+          </div>
+        </div></mat-tab
+      >
+      <mat-tab label="เภสัชกร">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="" [style.width.px]="300">
+                <mat-label>คลินิก</mat-label>
+                <select matNativeControl (change)="selectDeptPhar($event)">
+                  <option
+                    *ngFor="let x of listDept"
+                    [value]="x.deptCode + ',' + x.deptEn"
+                  >
+                    {{ x.deptEn }} -
+                    {{ x.deptTh }}
+                  </option>
+                </select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div [hidden]="listPharReport.length > 0">
+            <div class="center">
+              <h2 style="color: #adb5bd">
+                <i class="fas fa-exclamation-circle"></i>
+                ไม่พบข้อมูลจากคลินิกที่ท่านเลือก
+              </h2>
+            </div>
+          </div>
+          <div [hidden]="listPharReport.length == 0">
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataPharReport"
+                #sortPharReport="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+                matTableExporter
+                #exporterPhar="matTableExporter"
+              >
+                <ng-container matColumnDef="userName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    เภสัชกร
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.userName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Item (รายการ)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.item }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Unit (หน่วย)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.amount }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Save Cost (รวม)
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.cost }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="option">
+                  <th mat-header-cell *matHeaderCellDef>รายละเอียด</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    <i
+                      class="fas fa-search edit"
+                      (click)="pharDetial(element)"
+                    ></i>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayPharReport; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayPharReport"
+                ></tr>
+              </table>
+            </section>
+            <div class="row">
+              <div class="col">
+                <mat-paginator
+                  #paginatorPharReport="matPaginator"
+                  style="display: flex; justify-content: center"
+                  [length]="10"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[10, 25, 50]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+              <div class="col right h6 mt-3 me-2 space2">
+                รวม
+                <u>{{ pharItem }}</u> รายการ <u>{{ pharAmount }}</u> หน่วย
+                <u>{{ pharCost }}</u> บาท
+              </div>
+              <div class="col-2 right">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary mt-2"
+                  (click)="
+                    exporterPhar.exportTable('xlsx', {
+                      fileName: 'ยาคืน เภสัชกร ' + deptName,
+                      sheet: 'sheet1',
+                      Props: { Author: 'Talha' }
+                    })
+                  "
+                >
+                  <i class="far fa-file-excel"></i> ส่งออกไฟล์
+                </button>
+              </div>
+            </div>
+          </div>
+        </div></mat-tab
+      >
+    </mat-tab-group>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="orderDetialModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="orderDetialModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="orderDetialModalLabel">
+          <i class="fa fa-file-text-o" aria-hidden="true"></i> รายการยาทั้งหมด
+          {{ listDetail.length }} รายการ
+        </h2>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body pt-0 pb-0">
+        <div class="">
+          <section class="table-container" tabindex="0">
+            <table
+              style="width: 100%"
+              mat-table
+              [dataSource]="dataDetail"
+              #sortDetail="matSort"
+              matSort
+              class="table table-striped"
+              matSortActive="drugName"
+              matSortDirection="asc"
+            >
+              <ng-container matColumnDef="drugName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  ชื่อยา
+                </th>
+                <td mat-cell *matCellDef="let element" class="">
+                  {{ element.drugName }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>จำนวน</th>
+                <td mat-cell *matCellDef="let element" class="right">
+                  <b>{{ element.amount }}</b> {{ element.package }}
+                </td>
+              </ng-container>
+              <!-- <ng-container matColumnDef="package">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>หน่วย</th>
+                <td mat-cell *matCellDef="let element" class="ps-2">
+                  {{ element.package }}
+                </td>
+              </ng-container> -->
+              <ng-container matColumnDef="cost">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>ราคา</th>
+                <td mat-cell *matCellDef="let element" class="right">
+                  {{ element.cost }}
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedDetail; sticky: true"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedDetail; let i = index"
+                class=""
+              ></tr>
+            </table>
+          </section>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col center">
+          <mat-paginator
+            #paginatorDetail="matPaginator"
+            style="display: flex; justify-content: center"
+            [length]="10"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 25, 50]"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

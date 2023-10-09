@@ -1,0 +1,317 @@
+<ngx-spinner type="timer"></ngx-spinner>
+<div class="container-fluid">
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <p class="h5">
+          <i class="fa-solid fa-chart-line"></i>
+          คาดการณ์ยาล่วงหน้า
+        </p>
+      </div>
+      <div class="col center">
+        <form [formGroup]="campaign">
+          <mat-form-field>
+            <mat-label>เลือกวัน</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="picker"
+              (dateChange)="dateChange($event)"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col center">
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          (change)="changeUnit($event)"
+        >
+          <option
+            *ngFor="let x of units"
+            [value]="x.value"
+            [selected]="selectUnit === x.value"
+          >
+            {{ x.viewValue }}
+          </option>
+        </select>
+      </div>
+      <div class="col right ms-2">
+        <mat-form-field>
+          <input matInput (keyup)="appointFilter($event)" #input />
+          <mat-placeholder>ค้นหา : ชื่อยา</mat-placeholder>
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      <section class="table-container" tabindex="0">
+        <table
+          mat-table
+          [dataSource]="dataAppoint"
+          #sortAppoint="matSort"
+          matSort
+          class="table table-striped"
+          matSortActive="name"
+          matSortDirection="asc"
+          matTableExporter
+          #exporterSelect="matTableExporter"
+        >
+          <ng-container matColumnDef="invCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              รหัสยา INV
+            </th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.invCode }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="drugCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              รหัสยา HomC
+            </th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.drugCode }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.name }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="DFORM_NAME">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ชนิดยา</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.DFORM_NAME }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              จำนวนนัดหมาย
+            </th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.amount }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="addOn">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>+ 30%</th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.addOn }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="pack">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              จำนวน/กล่อง
+            </th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.pack }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="onhand">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              จำนวนที่มี
+            </th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.onhand }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="DISP">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              จำนวนที่ต้องเบิก
+            </th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.DISP }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="DISP_QTY">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              จำนวนที่ต้องเบิกสุทธิ
+            </th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.DISP_QTY }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="dispen">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <b>จำนวนจ่ายจริง</b>
+            </th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.dispen }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="accuracy1">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              ความแม่นยำ (จำนวนนัดหมาย)
+            </th>
+            <td
+              style="padding-right: 24px"
+              mat-cell
+              *matCellDef="let element"
+              class="num"
+            >
+              {{ element.accuracy1 }} %
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="accuracy30">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              ความแม่นยำ (+30%)
+            </th>
+            <td
+              style="padding-right: 24px"
+              mat-cell
+              *matCellDef="let element"
+              class="num"
+            >
+              {{ element.accuracy30 }} %
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayAppoint; sticky: true"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayAppoint; let i = index"
+          ></tr>
+        </table>
+      </section>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div [hidden]="formattedDateNum < enDateNum">
+          <div class="d-flex">
+            <div>
+              <i class="far fa-calendar-check"></i> จำนวนนัดหมาย :
+              <b>{{ accuracy1 }} %</b>
+            </div>
+            <div class="mx-4">
+              <i class="far fa-calendar-check"></i> +30% :
+              <b>{{ accuracy30 }} %</b>
+            </div>
+          </div>
+
+          <div class="form-check">
+            <input
+              class="form-check-input pointer"
+              type="checkbox"
+              value=""
+              id="defaultCheck1"
+              (change)="selectToDis()"
+            />
+            <label class="form-check-label pointer" for="defaultCheck1"
+              >แสดงเฉพาะยาที่จ่าย</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-5 center">
+        <mat-paginator
+          #paginatorAppoint="matPaginator"
+          style="display: flex; justify-content: center"
+          [length]="10"
+          [pageSize]="10"
+          [pageSizeOptions]="[10, 25, 50]"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      </div>
+
+      <div class="col right pt-2">
+        <a
+          class="btn btn-outline-primary mr-2"
+          href="#MapDrugCode"
+          role="button"
+          ><i class="fas fa-spell-check"></i> จับคู่โค้ดยา</a
+        >
+        <button
+          [hidden]="formattedDateNum < enDateNum"
+          type="button"
+          class="btn btn-outline-success"
+          (click)="
+            exporterSelect.exportTable('xlsx', {
+              fileName: 'คาดการยา_' + enDate,
+              sheet: 'sheet1',
+              Props: { Author: 'Talha' }
+            })
+          "
+        >
+          <i class="far fa-file-excel"></i> ส่งออกรายงาน
+        </button>
+        <button
+          [hidden]="formattedDateNum >= enDateNum"
+          type="button"
+          class="btn btn-outline-success"
+          (click)="
+            exporterINV.exportTable('xls', {
+              fileName: 'เบิกยา(' + this.unitName + ')(' + this.enDate + ')',
+              sheet: 'sheet1',
+              Props: { Author: 'Talha' }
+            })
+          "
+        >
+          <i class="far fa-file-excel"></i> เบิก{{ unitName }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="display: none">
+  <table
+    mat-table
+    [dataSource]="dataAppoint"
+    #sortAppoint="matSort"
+    matSort
+    class=""
+    matSortActive="DISP_DATE"
+    matSortDirection="asc"
+    matTableExporter
+    #exporterINV="matTableExporter"
+  >
+    <ng-container matColumnDef="indexrow">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.indexrow }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="DISP_DATE">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>DISP_DATE</th>
+      <td mat-cell *matCellDef="let element" class="">
+        {{ DISP_DATE }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="MED_CODE">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>MED_CODE</th>
+      <td mat-cell *matCellDef="let element" class="">
+        {{ element.MED_CODE }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="DISP_DEPT">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>DISP_DEPT</th>
+      <td mat-cell *matCellDef="let element" class="">
+        {{ DISP_DEPT }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="DISP_QTY">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>DISP_QTY</th>
+      <td mat-cell *matCellDef="let element" class="">
+        {{ element.DISP_QTY }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="DISP_NAME">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>DISP_NAME</th>
+      <td mat-cell *matCellDef="let element" class="right">
+        {{ element.DISP_NAME }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayINV"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayINV; let i = index"></tr>
+  </table>
+</div>

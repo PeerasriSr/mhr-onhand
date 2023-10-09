@@ -1,0 +1,122 @@
+<div class="container">
+  <div class="card">
+    <div class="center space">
+      <!-- <img src="/assets/img/logo_login.png" /> -->
+      <img src="/OnHand/assets/img/logo_login.png" />
+      <h1>Onhand</h1>
+      <h2>โรงพยาบาลมหาราช นครราชสีมา</h2>
+      <h2>{{ groupName }}</h2>
+      <!-- <p class="h2 mt-2">Onhand</p> -->
+      <!-- <p class="h4 mt-2">โรงพยาบาลมหาราช นครราชสีมา</p> -->
+      <!-- <p class="h4 mt-2">{{ groupName }}</p> -->
+      <form [formGroup]="inputGroup" (ngSubmit)="submitInput()">
+        <div class="mt-2 left">
+          <label for="InputID" class="form-label mb-2"
+            ><i class="fas fa-user"></i> บัญชีผู้ใช้</label
+          >
+          <input type="id" class="form-control" formControlName="id" />
+        </div>
+        <div class="mt-2 left">
+          <label for="InputPassword" class="form-label mb-2"
+            ><i class="fas fa-unlock"></i> รหัสผ่าน</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+          />
+        </div>
+        <div class="mt-2 left">
+          <label for="exampleFormControlSelect1"
+            ><i class="fas fa-map-marker-alt"></i> ตำแหน่ง</label
+          >
+          <select
+            class="form-control"
+            id="exampleFormControlSelect1"
+            #cricket
+            (change)="selectDep($event)"
+          >
+            <!-- <option selected></option> -->
+            <option
+              *ngFor="let x of listDep"
+              [value]="x.ID + ',' + x.Name + ',' + x.type"
+            >
+              {{ x.Name }}
+            </option>
+          </select>
+        </div>
+        <div class="mt-4">
+          <button type="submit" class="btn btn-primary form-group btn-block" >
+            เข้าสู่ระบบ
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form (ngSubmit)="submitGoup()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="staticBackdropLabel">
+            กรุณาเลือกหน่วยงาน
+          </h2>
+          <!-- <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button> -->
+        </div>
+        <div class="modal-body h4 center">
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="inlineRadio1"
+              value="opd"
+              (click)="selectGroup('opd')"
+            />
+            <label class="form-check-label" for="inlineRadio1">OPD</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="inlineRadio2"
+              value="ipd"
+              (click)="selectGroup('ipd')"
+            />
+            <label class="form-check-label" for="inlineRadio2">IPD</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button
+            *ngIf="myGroup"
+            type="button"
+            class="btn btn-primary"
+            type="submit"
+          >
+            ตกลง
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="right">
+  <p style="color: gray;">{{ ip }}</p>
+</div>

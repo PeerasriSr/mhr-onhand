@@ -1,0 +1,154 @@
+<div (click)="timerOut(1)">
+  <nav class="navbar navbar-light bg-white">
+    <div class="container-fluid">
+      <div id="containerHead">
+        <!-- <img src="/assets/new-logo.png" /> -->
+        <img src="/OnHand/assets/new-logo.png" />
+        <p class="h5" style="color: black; margin-left: 0.2em">{{ depName }}</p>
+      </div>
+
+      <div *ngIf="id">
+        <div *ngIf="depAtt == 'phar'">
+          <div id="containerHead" style="height: 31px">
+            <div
+              class="icon {{ page == 'Transfers' ? 'selectNav' : '' }}"
+              matTooltip="ขอยา"
+            >
+              <a href="#Transfers" (click)="selectPage('Transfers')">
+                <!-- <i class="fa-solid fa-share-from-square h4"></i> -->
+                <!-- <i class="fas fa-sign-out-alt h4"></i> -->
+                <i class="fas fa-hand-holding-medical h4"></i>
+              </a>
+            </div>
+            <div
+              class="icon {{ page == 'Inventorys' ? 'selectNav' : '' }}"
+              matTooltip="รายการยาในห้อง"
+            >
+              <a href="#Inventorys" (click)="selectPage('Inventorys')">
+                <i class="fa-solid fa-pills h4"></i>
+              </a>
+            </div>
+            <div
+              class="icon {{ page == 'INV/Other' ? 'selectNav' : '' }}"
+              matTooltip="รายการยาอื่นๆ"
+            >
+              <a href="#INV/Other" (click)="selectPage('INV/Other')">
+                <i class="fas fa-medkit h4"></i>
+              </a>
+            </div>
+            <div
+              class="icon {{ page == 'ExpDrug' ? 'selectNav' : '' }}"
+              matTooltip="วันหมดอายุ"
+            >
+              <span matBadge="{{ alertExpBadge }}" *ngIf="alertExpBadge > 0">
+                <a href="#ExpDrug" (click)="selectPage('ExpDrug')">
+                  <i class="fas fa-bell h4"></i>
+                </a>
+              </span>
+              <a
+                href="#ExpDrug"
+                (click)="selectPage('ExpDrug')"
+                *ngIf="alertExpBadge == 0"
+              >
+                <i class="fas fa-bell h4"></i>
+              </a>
+            </div>
+
+            <div
+              class="icon {{ page == 'INV/Update' ? 'selectNav' : '' }}"
+              matTooltip="อัปเดตรายการยา"
+            >
+              <a href="#INV/Update" (click)="selectPage('INV/Update')">
+                <!-- <i class="fa-solid fa-pen-to-square h4"></i> -->
+                <i class="fas fa-pen-square h4"></i>
+              </a>
+            </div>
+            <div
+              class="icon {{ page == 'Appoints' ? 'selectNav' : '' }}"
+              matTooltip="คาดการณ์ยาล่วงหน้า"
+            >
+              <a href="#Appoints" (click)="selectPage('Appoints')">
+                <i class="fa-solid fa-chart-line h4"></i>
+              </a>
+            </div>
+            <div
+              class="icon {{ page == 'Trans/Report' ? 'selectNav' : '' }}"
+              matTooltip="รายงานขอยา"
+            >
+              <a href="#Trans/Report" (click)="selectPage('Trans/Report')">
+                <i class="fas fa-dolly-flatbed h4"></i>
+              </a>
+            </div>
+            <div
+              class="icon {{ page == 'Dispens' ? 'selectNav' : '' }}"
+              matTooltip="รายงานการจ่ายยา"
+            >
+              <a href="#Dispens" (click)="selectPage('Dispens')">
+                <i class="fas fa-shopping-basket h4"></i>
+              </a>
+            </div>
+            <!-- <div
+            class="icon {{ page == 'SubStock' ? 'selectNav' : '' }}"
+            matTooltip="คลังย่อย"
+          >
+            <a href="#SubStock" (click)="selectPage('SubStock')">
+              <i class="fa-solid fa-store h4"></i>
+            </a>
+          </div> -->
+          </div>
+        </div>
+        <div *ngIf="depAtt == 'r93'">
+          <div id="containerHead" style="height: 31px">
+            <div
+              class="icon {{ page == 'Abundant' ? 'selectNav' : '' }}"
+              matTooltip="ลงข้อมูล"
+            >
+              <a href="#Abundant" (click)="selectPage('Abundant')">
+                <i class="fas fa-edit h4"></i>
+              </a>
+            </div>
+            <div
+              class="icon {{ page == 'Abundant/Report' ? 'selectNav' : '' }}"
+              matTooltip="รายงาน"
+            >
+              <a
+                href="#Abundant/Report"
+                (click)="selectPage('Abundant/Report')"
+              >
+                <i class="far fa-file-alt h4"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="depAtt == 'phar'">
+        <form
+          [formGroup]="searchGroup"
+          (ngSubmit)="searchGroup.valid ? submitISearch() : ''"
+        >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="ค้นหายาจากทุกห้อง : ชื่อยา"
+              formControlName="key"
+            />
+            <button type="submit" class="btn btn-primary form-group btn-sm">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div id="containerHead">
+        <p class="h5 mr-1">
+          <i class="fa-solid fa-circle-user"></i> {{ user }}
+        </p>
+        <button type="button" class="btn btn-danger btn-sm" (click)="LogOut()">
+          <i class="fa fa-sign-out" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <router-outlet></router-outlet>
+</div>

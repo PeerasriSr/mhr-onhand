@@ -1,0 +1,241 @@
+/* You can add global styles to this file, and also import other style files */
+
+* {
+  font-size: 1rem;
+}
+
+html {
+  font-size: calc(60% + 0.8vmin) !important;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f9f9fa;
+}
+
+.rowtop {
+  // background-color: #f8f9fa;
+  //box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  // position: sticky;
+  // top: 58.17px;
+  align-items: center;
+  // border-bottom: 1px solid lightgray;
+}
+
+.rowbottom {
+  align-items: center;
+}
+
+.btns {
+  border-radius: 20px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.example-container {
+  border-radius: 10px;
+  background-color: #fff;
+  padding: 0 8px 8px 8px;
+  // max-height: 550px;
+  // overflow: auto;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.example-container2 {
+  max-height: 500px;
+  overflow: auto;
+}
+
+.modal-body {
+  padding: 0 8px;
+}
+
+th.mat-header-cell {
+  font-size: 1rem;
+  text-align: center !important;
+  // background-color: #115089;
+  // background-color: #e2e5ea;
+  // color: #fff;
+}
+
+th.mat-header-cell.sticky {
+  // position: sticky !important;
+  // top: 127.32px !important;
+}
+
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.card {
+  border-radius: 20px;
+  margin-top: 8px;
+  padding: 8px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.red {
+  color: #dc3545;
+  .mat-cell {
+    color: #dc3545 !important;
+  }
+}
+
+.green {
+  color: #28a745;
+}
+
+.blue {
+  color: #0d6efd;
+}
+
+.yellow {
+  color: #fad02c;
+}
+
+.oran {
+  color: #fd7f20;
+}
+.grey {
+  color: grey;
+}
+
+table {
+  width: 100%;
+}
+
+// table {
+//   font-size: 1rem;
+//   width: 100%;
+//   margin-bottom: 0 !important;
+// }
+
+// .table thead th,
+// .table td {
+//   vertical-align: middle;
+// }
+
+.mat-paginator {
+  background-color: hsla(0, 0%, 100%, 0);
+  .mat-icon-button {
+    box-shadow: none;
+  }
+}
+
+.mat-row:nth-child(even) {
+  // background-color: #f1f7fd;
+}
+
+.mat-row:nth-child(odd) {
+  // background-color: #f1f7fd !important;
+  background-color: #edeff2 !important;
+}
+
+.mat-sort-header-container {
+  font-size: 1rem;
+  justify-content: center;
+}
+
+td.mat-cell,
+th.mat-header-cell {
+  padding: 0 4px !important;
+  border-bottom-style: none !important;
+}
+// th.mat-header-cell:last-of-type,
+// td.mat-cell:last-of-type{
+//   padding-right: 16px !important;
+// }
+// th.mat-header-cell:first-of-type,
+// td.mat-cell:first-of-type{
+//   padding-left: 16px !important;
+// }
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin-bottom: 0 !important;
+}
+
+.close {
+  span {
+    font-size: 28px !important;
+  }
+}
+
+.grid-col {
+  display: grid;
+  // column-gap: 4px;
+  grid-template-columns: auto auto;
+}
+
+.modal-footer {
+  padding: 0 0.75rem !important;
+}
+
+.custom-file,
+.custom-file-input,
+.custom-file-label,
+.form-control {
+  border-radius: 20px !important;
+}
+
+.mat-tab-body-content {
+  overflow: unset !important;
+}
+
+.topLine {
+  border-top: 1px solid #edf1f8;
+}
+.botLine {
+  border-bottom: 1px solid #edf1f8;
+}
+
+.mat-tab-labels {
+  border-top: 1px solid lightgrey;
+}
+
+.mat-tab-label.mat-tab-label-active {
+  color: #0d6efd;
+  // font-weight: bold;
+}
+
+.mat-ink-bar {
+  background-color: rgba(0, 128, 0, 0) !important;
+}
+
+.mat-tab-body {
+  padding: 0 2px;
+}
+
+.toggle {
+  i {
+    font-size: 1.5rem !important;
+  }
+}

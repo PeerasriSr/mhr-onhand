@@ -1,0 +1,34 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  //   height: 100%;
+  //   column-gap: 8px;
+  // padding: 10px;
+}
+
+th.mat-header-cell {
+  .noneBorder {
+    border-top: none;
+  }
+}
+
+#containerHead input,
+#containerHead button,
+#containerHead img,
+#containerHead p,
+#containerHead div,
+#containerHead label {
+  display: inline;
+}
+
+button {
+  border: none !important;
+}
+
+.confirm {
+  color: green;
+}
+
+.cancel {
+  color: red;
+}

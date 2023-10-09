@@ -1,0 +1,8 @@
+.grid-container{
+  // height: 100%;
+  display: grid;
+  column-gap: 8px;
+  grid-template-columns: 50% auto;
+  // padding: 10px;
+}
+

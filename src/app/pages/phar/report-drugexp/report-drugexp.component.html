@@ -1,0 +1,231 @@
+<ngx-spinner type="timer"></ngx-spinner>
+<div class="container-fluid">
+  <div class="grid-container grid1">
+    <div class="grid-item">
+      <div class="row rowtop pt-3 pb-3">
+        <div class="col">
+          <h2><i class="fas fa-skull-crossbones"></i> หมดอายุแล้ว</h2>
+        </div>
+      </div>
+
+      <div class="example-container mat-elevation-z8">
+        <table
+          mat-table
+          [dataSource]="dataAlertExp"
+          #sortAlertExp="matSort"
+          matSort
+          matSortActive=""
+          matSortDirection=""
+        >
+          <ng-container matColumnDef="indexrow">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.indexrow }}
+            </td>
+          </ng-container>
+          <!-- <ng-container matColumnDef="drugCode">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                รหัสยา
+                              </th>
+                              <td mat-cell *matCellDef="let element" class="">
+                                {{ element.drugCode }}
+                              </td>
+                            </ng-container> -->
+          <ng-container matColumnDef="drugName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.drugName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="LOT_NO">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Lot. No.</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.LOT_NO }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="EXP_Date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Exp.</th>
+            <td mat-cell *matCellDef="let element" class="center">
+              {{ element.EXP_Date }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>จำนวน</th>
+            <td mat-cell *matCellDef="let element" class="num">
+              {{ element.amount }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+            <td mat-cell *matCellDef="let element" class="num">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="editAmount(element)"
+                *ngIf="role == 'stock'"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayAlertExp; sticky: true"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayAlertExp; let i = index"
+          ></tr>
+        </table>
+      </div>
+      <div class="">
+        <mat-paginator
+          #paginatorAlertExp="matPaginator"
+          [length]="10"
+          [pageSize]="10"
+          [pageSizeOptions]="[10, 25, 50]"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      </div>
+    </div>
+    <div class="grid-item">
+      <div class="row rowtop">
+        <div class="col-md-auto">
+          <h2><i class="fas fa-hourglass-half"> ใกล้หมดอายุ</i></h2>
+        </div>
+        <div class="col">
+          <mat-form-field class="example-form-field">
+            <mat-date-range-input
+              [formGroup]="campaignOne"
+              [rangePicker]="campaignOnePicker"
+              [comparisonStart]="campaignOne.value.start"
+              [comparisonEnd]="campaignOne.value.end"
+            >
+              <input
+                matStartDate
+                placeholder="วันที่ เริ่มต้น"
+                formControlName="start"
+                (dateChange)="startChange($event)"
+              />
+              <input
+                matEndDate
+                placeholder="สิ้นสุด"
+                formControlName="end"
+                (dateChange)="endChange($event)"
+              />
+            </mat-date-range-input>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="campaignOnePicker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="example-container">
+        <table
+          mat-table
+          [dataSource]="dataAllExp"
+          #sortAllExp="matSort"
+          matSort
+          matSortActive="EXP_Date"
+          matSortDirection="asc"
+          matTableExporter
+          #exporterSelect="matTableExporter"
+        >
+          <ng-container matColumnDef="indexrow">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.indexrow }}
+            </td>
+          </ng-container>
+          <!-- <ng-container matColumnDef="drugCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                          รหัสยา
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="">
+                          {{ element.drugCode }}
+                        </td>
+                      </ng-container> -->
+          <ng-container matColumnDef="drugName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.drugName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="LOT_NO">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>เลข Lot</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.LOT_NO }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="EXP_Date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              วันหมดอายุ
+            </th>
+            <td mat-cell *matCellDef="let element" class="center">
+              {{ element.EXP_Date }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+            <td mat-cell *matCellDef="let element" class="num">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="editAmount(element)"
+                *ngIf="role == 'stock'"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayAllExp; sticky: true"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayAllExp; let i = index"
+          ></tr>
+        </table>
+      </div>
+      <div class="row rowbottom">
+        <div class="col">
+          <button
+            type="button"
+            class="btn btn-light btns"
+            (click)="
+              exporterSelect.exportTable('xlsx', {
+                fileName:
+                  'ยาใกล้หมดอายุ' +
+                  '_' +
+                  dep +
+                  '_' +
+                  startDate +
+                  '_ถึง_' +
+                  endDate,
+                sheet: 'sheet1',
+                Props: { Author: 'Talha' }
+              })
+            "
+          >
+            <i class="fas fa-file-download blue"></i> ส่งออกไฟล์
+          </button>
+        </div>
+        <div class="col-md-auto">
+          <mat-paginator
+            #paginatorAllExp="matPaginator"
+            [length]="10"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 25, 50]"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

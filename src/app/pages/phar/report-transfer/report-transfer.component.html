@@ -1,0 +1,132 @@
+<ngx-spinner type="timer"></ngx-spinner>
+<div class="container-fluid">
+  <div class="row rowtop">
+    <div class="col">
+      <h2><i class="fas fa-hand-holding-medical"></i> การขอยาระหว่างห้อง</h2>
+    </div>
+    <div class="col center">
+      <mat-form-field class="example-form-field">
+        <mat-date-range-input
+          [formGroup]="campaignOne"
+          [rangePicker]="campaignOnePicker"
+          [comparisonStart]="campaignOne.value.start"
+          [comparisonEnd]="campaignOne.value.end"
+        >
+          <input
+            matStartDate
+            placeholder="วันที่ เริ่มต้น"
+            formControlName="start"
+            (dateChange)="startChange($event)"
+          />
+          <input
+            matEndDate
+            placeholder="สิ้นสุด"
+            formControlName="end"
+            (dateChange)="endChange($event)"
+          />
+        </mat-date-range-input>
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="campaignOnePicker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+      </mat-form-field>
+    </div>
+    <div class="col right">
+      <mat-form-field>
+        <input matInput (keyup)="reportFilter($event)" #input />
+        <mat-placeholder>ค้นหา : </mat-placeholder>
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="example-container">
+    <table
+      mat-table
+      [dataSource]="dataTarnf"
+      #sortTranf="matSort"
+      matSort
+     
+      matSortActive=""
+      matSortDirection=""
+      matTableExporter
+      #exporterTranf="matTableExporter"
+    >
+      <ng-container matColumnDef="createDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>วัน เวลา</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.createDate }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="nameFrom">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ต้นทาง</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.nameFrom }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="nameTo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ปลายทาง</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.nameTo }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="drugName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.drugName }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>จำนวน</th>
+        <td mat-cell *matCellDef="let element" class="right">
+          <b>{{ element.amount }} </b>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="package">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>หน่วย</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.package }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ผู้ปฏิบัติงาน</th>
+        <td mat-cell *matCellDef="let element" class="">
+          <b>{{ element.userName }}</b>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayTranf; sticky: true"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayTranf; let i = index"
+      ></tr>
+    </table>
+  </div>
+  <div class="row rowbottom">
+    <div class="col">
+      <button
+        type="button"
+        class="btn btn-light btns"
+        (click)="
+          exporterTranf.exportTable('xlsx', {
+            fileName: 'รายงานขอยา' + '_' + startDate + '_ถึง_' + endDate,
+            sheet: 'sheet1',
+            Props: { Author: 'Talha' }
+          })
+        "
+      >
+      <i class="fas fa-file-download blue"></i> ส่งออกไฟล์
+      </button>
+    </div>
+    <div class="col-md-auto">
+      <mat-paginator
+        #paginTranf="matPaginator"
+        [length]="10"
+        [pageSize]="10"
+        [pageSizeOptions]="[10, 25, 50]"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    </div>
+  </div>
+</div>

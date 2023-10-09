@@ -1,0 +1,752 @@
+<div
+  class="container-fluid"
+  *ngIf="job == 'P' || job == 'I'"
+>
+  <div class="row display">
+    <div class="col col-left">
+      <div class="card" [hidden]="history == true || selectRequest == true">
+        <div class="row headCard">
+          <div class="col">
+            <p class="h5">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+              รายการขอยา
+            </p>
+          </div>
+          <div class="col right">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary"
+              (click)="showHistory()"
+            >
+              <i class="fa fa-history" aria-hidden="true"></i>
+              ดูประวัติการให้ยา
+            </button>
+          </div>
+        </div>
+        <div
+          class="card-body"
+          [hidden]="listRequest.length > 0"
+          style="border-top: 0.1px solid lightgray"
+        >
+          <div class="center mt-3">
+            <h2>
+              <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+              ไม่มีรายการขอยา
+            </h2>
+          </div>
+        </div>
+        <div class="card-body" [hidden]="listRequest.length == 0">
+          <table
+            mat-table
+            [dataSource]="dataRequest"
+            #sortRequest="matSort"
+            matSort
+            class=""
+            matSortActive="no"
+            matSortDirection="asc"
+          >
+            <ng-container matColumnDef="NO">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                เลขที่ใบขอ
+              </th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.NO }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="applicant_dep">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                หน่วยที่ขอ
+              </th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.applicant_Name }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="userName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ผู้ขอ</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.userName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                วันที่ขอ
+              </th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.date }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="time">
+              <th mat-header-cell *matHeaderCellDef>เวลา</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.time }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="completeDate">
+              <th mat-header-cell *matHeaderCellDef>สถานะ</th>
+              <td mat-cell *matCellDef="let element" class="center">
+                <div [hidden]="element.completeDate != null">
+                  รอการตรวจสอบ
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="viewRequest(element)"
+                  >
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div [hidden]="element.completeDate == null">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="viewRequest(element)"
+                  >
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayRequest"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayRequest"></tr>
+          </table>
+          <mat-paginator
+            #paginatorRequest="matPaginator"
+            style="display: flex; justify-content: center"
+            [length]="10"
+            [pageSize]="10"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+      </div>
+      <div class="card" [hidden]="history == false">
+        <div class="row headCard">
+          <div class="col">
+            <p class="h5">
+              <i class="fa fa-history" aria-hidden="true"></i> ประวัติการให้ยา
+            </p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div
+            [hidden]="listHistory.length > 0"
+            style="border-top: 0.1px solid lightgray"
+          >
+            <h2 class="center m-0 p-2">
+              <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+              ไม่พบประวัติการให้ยา
+            </h2>
+          </div>
+          <div [hidden]="listHistory.length == 0">
+            <table
+              mat-table
+              [dataSource]="dataHistory"
+              #sortHistory="matSort"
+              matSort
+              class=""
+              matSortActive="NO"
+              matSortDirection="asc"
+            >
+              <ng-container matColumnDef="NO">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="">
+                  เลขที่ใบขอ
+                </th>
+                <td mat-cell *matCellDef="let element">{{ element.NO }}</td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  วันที่ขอ
+                </th>
+                <td mat-cell *matCellDef="let element" class="">
+                  {{ element.date }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef>เวลา</th>
+                <td mat-cell *matCellDef="let element" class="">
+                  {{ element.time }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="applicantName">
+                <th mat-header-cell *matHeaderCellDef>ผู้ขอ</th>
+                <td mat-cell *matCellDef="let element" class="">
+                  {{ element.applicantName }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="applicantDep">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  หน่วยที่ขอ
+                </th>
+                <td mat-cell *matCellDef="let element" class="">
+                  {{ element.applicantDep }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="approvesName">
+                <th mat-header-cell *matHeaderCellDef>ผู้อนุมัติให้</th>
+                <td mat-cell *matCellDef="let element" class="">
+                  {{ element.approvesName }}
+                </td>
+              </ng-container>
+              <!-- <ng-container matColumnDef="option">
+                <th mat-header-cell *matHeaderCellDef>เลือก</th>
+                <td mat-cell *matCellDef="let element" class="">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    (click)="viewAccept(element)"
+                  >
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </ng-container> -->
+              <tr mat-header-row *matHeaderRowDef="displayHistory"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayHistory"
+                style="cursor: pointer"
+                (click)="viewAccept(row)"
+                [ngClass]="{
+                  highlightTableColor: selectedRowIndex == row.indexrow
+                }"
+              ></tr>
+            </table>
+            <mat-paginator
+              #paginatorHistory="matPaginator"
+              style="display: flex; justify-content: center"
+              [length]="10"
+              [pageSize]="10"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col center">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary mt-2"
+              (click)="undo()"
+            >
+              <i class="fa fa-undo" aria-hidden="true"></i> ย้อนกลับ
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card" [hidden]="selectRequest == false">
+        <div class="row headCard">
+          <div class="col">
+            <p class="h5">
+              <i class="fa fa-envelope" aria-hidden="true"></i> เลขที่
+              {{ detailNO }} ({{ detailDepName }})
+            </p>
+          </div>
+        </div>
+        <div class="card-body">
+          <table
+            mat-table
+            [dataSource]="dataDetail"
+            #sortDetail="matSort"
+            matSort
+            class=""
+            matSortActive="rowNum"
+            matSortDirection="asc"
+          >
+            <ng-container matColumnDef="rowNum">
+              <th mat-header-cell *matHeaderCellDef>ลำดับ</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.rowNum + 1 }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="drugName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.drugName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="REQU_QTY">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>จำนวนขอ</th>
+              <td mat-cell *matCellDef="let element" class="right">
+                {{ element.REQU_QTY }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="DISP_QTY">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                จำนวนจ่าย
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                class="right num{{ element.DISP_QTY == '-' ? '' : 'textRed' }}"
+              >
+                {{ element.DISP_QTY }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="option">
+              <th mat-header-cell *matHeaderCellDef>เลือก</th>
+              <td mat-cell *matCellDef="let element" class="">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  data-toggle="modal"
+                  data-target="#dispenModal"
+                  data-backdrop="static"
+                  data-keyboard="false"
+                  (click)="formAmountDispen(element)"
+                >
+                  <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayDetail"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayDetail"></tr>
+          </table>
+          <mat-paginator
+            #paginatorDetail="matPaginator"
+            style="display: flex; justify-content: center"
+            [length]="10"
+            [pageSize]="10"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+        <div class="center mb-1">
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm mr-2"
+            (click)="clearRequest()"
+          >
+            <i class="fa fa-undo" aria-hidden="true"></i> ย้อนกลับ
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col col-right">
+      <div class="card" [hidden]="history == false || listAccept.length == 0">
+        <div class="row headCard">
+          <div class="col">
+            <p class="h5">
+              <i class="fa fa-list-alt" aria-hidden="true"></i>
+              รายการยาให้เลขที่ {{ selectHis }}
+            </p>
+          </div>
+        </div>
+        <div class="card-body">
+          <table
+            mat-table
+            [dataSource]="dataAccept"
+            #sortAccept="matSort"
+            matSort
+            class=""
+            matSortActive="drugName"
+            matSortDirection="asc"
+          >
+            <ng-container matColumnDef="drugName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.drugName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="REQU_QTY">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>จำนวนขอ</th>
+              <td mat-cell *matCellDef="let element" class="right">
+                {{ element.REQU_QTY }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="DISP_QTY">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                จำนวนให้
+              </th>
+              <td mat-cell *matCellDef="let element" class="right num">
+                {{ element.DISP_QTY }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="LOT_NO">
+              <th mat-header-cell *matHeaderCellDef>เลข Lot</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.LOT_NO }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="EXP_Date">
+              <th mat-header-cell *matHeaderCellDef>วันหมดอายุ</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.EXP_Date }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayAccept"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayAccept"></tr>
+          </table>
+          <mat-paginator
+            #paginatorAccept="matPaginator"
+            style="display: flex; justify-content: center"
+            [length]="10"
+            [pageSize]="10"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+      </div>
+      <div class="card" [hidden]="selectRequest == false">
+        <div class="row headCard">
+          <div class="col">
+            <p class="h5">
+              <i class="fa fa-list-alt" aria-hidden="true"></i>
+              รายการให้ยา
+            </p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div [hidden]="listDispen.length == 0" #TABLE>
+            <table
+              mat-table
+              #table
+              [dataSource]="dataDispen"
+              #sortDispen="matSort"
+              matSort
+              class=""
+              matSortActive="drugName"
+              matSortDirection="asc"
+            >
+              <ng-container matColumnDef="row">
+                <th mat-header-cell *matHeaderCellDef>ลำดับ</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  {{ i + 1 }}.
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    (click)="delDispen(element)"
+                  >
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="drugName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  ชื่อยา
+                </th>
+                <td mat-cell *matCellDef="let element" class="">
+                  {{ element.drugName }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="LOT_NO">
+                <th mat-header-cell *matHeaderCellDef>เลข Lot</th>
+                <td mat-cell *matCellDef="let element" class="center">
+                  {{ element.LOT_NO }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="EXP_Date">
+                <th mat-header-cell *matHeaderCellDef class="not-line">
+                  วันหมดอายุ
+                </th>
+                <td mat-cell *matCellDef="let element" class="center not-line">
+                  {{ element.EXP_Date }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="REQU_Dep">
+                <th mat-header-cell *matHeaderCellDef style="display: none">
+                  หน่วยที่ขอ
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="right"
+                  style="display: none"
+                >
+                  {{ element.REQU_Dep }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="REQU_QTY">
+                <th mat-header-cell *matHeaderCellDef style="display: none">
+                  จำนวนขอ
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="right"
+                  style="display: none"
+                >
+                  {{ element.REQU_QTY }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="DISP_Dep">
+                <th mat-header-cell *matHeaderCellDef style="display: none">
+                  หน่วยที่ให้
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="right"
+                  style="display: none"
+                >
+                  {{ element.DISP_Dep }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="DISP_QTY">
+                <th mat-header-cell *matHeaderCellDef>จำนวนให้</th>
+                <td mat-cell *matCellDef="let element" class="right num">
+                  {{ element.DISP_QTY }}
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    data-toggle="modal"
+                    data-target="#editModal"
+                    data-backdrop="static"
+                    data-keyboard="false"
+                    (click)="editAmount(element)"
+                  >
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef style="display: none">
+                  ผู้อนุมัติให้
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="right"
+                  style="display: none"
+                >
+                  {{ element.id }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayDispen"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayDispen"></tr>
+            </table>
+            <mat-paginator
+              #paginatorRequest="matPaginator"
+              style="display: flex; justify-content: center"
+              [length]="10"
+              [pageSize]="10"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+            <div class="center mb-1">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="submit()"
+              >
+                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                ส่งขอมูลการให้ยา
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- dispenModal -->
+<div
+  class="modal fade"
+  id="dispenModal"
+  tabindex="-1"
+  aria-labelledby="dispenModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <form [formGroup]="formpDispen" (ngSubmit)="addDispen()">
+      <div class="modal-content">
+        <div class="modal-header pb-0">
+          <h2 class="modal-title" id="dispenModalLabel">
+            {{ drugName }} คงเหลือทั้งหมด : {{ REQU_QTY }}
+          </h2>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            #closebutton2
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pt-0" [hidden]="detailINVS.length == 0">
+          <!-- <div class="row mt-2">
+              <div class="col h5">
+                <i class="fa fa-envelope" aria-hidden="true"></i> จำนวนขอ
+                {{ REQU_QTY }}
+              </div>
+              <div class="col h5">
+                <i class="fa fa-suitcase" aria-hidden="true"></i> จำนวนที่มี
+                {{ sumLot }}
+              </div>
+            </div> -->
+
+          <div class="row mt-2">
+            <!-- <div class="center mt-2"><i class="fa fa-caret-down" aria-hidden="true"></i></div> -->
+            <div class="col">
+              <label>LOT. NO</label>
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                (change)="selectLot($event)"
+              >
+                <option *ngFor="let x of detailINVS" [value]="x.LOT_NO">
+                  {{ x.LOT_NO }}
+                </option>
+              </select>
+            </div>
+            <div class="col">
+              <label>EXP. Date</label>
+              <input
+                class="form-control"
+                type="text"
+                formControlName="EXP_Date"
+                [readonly]="true"
+                style="background-color: #fff"
+              />
+            </div>
+
+            <div class="col">
+              <label>จำนวนคงเหลือ</label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="stock"
+                [readonly]="true"
+                style="background-color: #fff"
+              />
+            </div>
+            <div class="col">
+              <label>จำนวนให้</label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="DISP_QTY"
+              />
+            </div>
+            <!-- <label class="mt-2 " style="text-decoration: underline"
+                >* เลือก LOT ที่ต้องการให้</label
+              > -->
+          </div>
+        </div>
+        <div
+          class="modal-body pt-0 pb-0"
+          [hidden]="detailINVS.length != 0"
+          style="border-top: 0.1px solid lightgray"
+        >
+          <div class="center">
+            <h2 style="color: red">ไม่มียาในห้อง เลือกจ่ายเป็นจำนวน 0</h2>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            <i class="fa fa-undo" aria-hidden="true"></i> ยกเลิก
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [hidden]="detailINVS.length == 0"
+          >
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> ยืนยัน
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-dismiss="modal"
+            [hidden]="detailINVS.length > 0"
+            (click)="setZero()"
+          >
+            <i class="fa fa-check-circle" aria-hidden="true"></i> ตกลง
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- editModal -->
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <form [formGroup]="formpDispen" (ngSubmit)="submitAmount()">
+      <div class="modal-content" style="width: 500px">
+        <div class="modal-header pb-0">
+          <h2 class="modal-title" id="editModalLabel">แก้ไขจำนวน</h2>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            #closebutton3
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <label>ชื่อยา</label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="drugName"
+              [readonly]="true"
+              style="background-color: #fff"
+            />
+          </div>
+          <div class="row mt-2">
+            <div class="col">
+              <label>LOT_NO</label>
+              <input
+                class="form-control"
+                type="text"
+                formControlName="LOT_NO"
+                [readonly]="true"
+                style="background-color: #fff"
+              />
+            </div>
+            <div class="col">
+              <label>EXP_Date</label>
+              <input
+                class="form-control"
+                type="text"
+                formControlName="EXP_Date"
+                [readonly]="true"
+                style="background-color: #fff"
+              />
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col">
+              <label>จำนวนที่มี</label>
+              <p class="p-amount">{{ selectAmount }}</p>
+            </div>
+            <div class="col" *ngIf="selectAmount > 0">
+              <label>จำนวนที่จ่าย</label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="DISP_QTY"
+              />
+            </div>
+            <div class="col" *ngIf="selectAmount == 0">
+              <label>จำนวนที่จ่าย</label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="DISP_QTY"
+                [readonly]="true"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            <i class="fa fa-undo" aria-hidden="true"></i> ยกเลิก
+          </button>
+          <button type="submit" class="btn btn-primary" *ngIf="selectAmount > 0">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> บันทึก
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

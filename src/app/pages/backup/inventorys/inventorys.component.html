@@ -1,0 +1,277 @@
+<ngx-spinner type="timer"></ngx-spinner>
+<div class="container-fluid">
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <p class="h5"><i class="fa-solid fa-pills"></i> รายการยาในห้อง</p>
+      </div>
+
+      <div class="col right">
+        <mat-form-field>
+          <input matInput (keyup)="INVFilter($event)" #input />
+          <mat-placeholder>ค้นหา : ชื่อยา</mat-placeholder>
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- <div [hidden]="listINV.length > 0">
+      <div class="center">
+        <H2 style="color: #adb5bd">
+          <i class="fas fa-exclamation-circle"></i>
+          ไม่พบรายการยา</H2
+        >
+      </div>
+    </div> -->
+    <div>
+      <section class="table-container" tabindex="0">
+        <table
+          mat-table
+          [dataSource]="dataINV"
+          #sortINV="matSort"
+          matSort
+          class="table table-striped"
+          matSortActive="drugName"
+          matSortDirection="asc"
+          matTableExporter
+          #exporterINV="matTableExporter"
+        >
+          <ng-container matColumnDef="invCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              รหัสใช้เบิก
+            </th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.invCode }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="drugCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>รหัสยา</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.drugCode }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="drugName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.drugName }}
+            </td>
+          </ng-container>
+          <!-- <ng-container matColumnDef="miniSpec">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ปริมาณ</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.miniSpec }}
+            </td>
+          </ng-container> -->
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ตำแหน่ง</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.position }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              จำนวนคงเหลือ
+            </th>
+            <td mat-cell *matCellDef="let element" class="right">
+              <b>{{ element.amount }}</b> {{ element.miniSpec }}
+              <i
+                class="far fa-edit edit"
+                (click)="editAmount(element)"
+                *ngIf="role == 'stock'"
+              ></i>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="hit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>หมายเหตุ</th>
+            <td mat-cell *matCellDef="let element" class="center">
+              <i class="fas fa-search edit" (click)="drugHistory(element)"></i>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="EXP_Date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              วันหมดอายุ
+            </th>
+            <td mat-cell *matCellDef="let element" class="">
+              <b>EXP. </b>{{ element.EXP_Date }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="invPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ราคาทุน</th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.invPrice }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="mhrPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ราคาขาย</th>
+            <td mat-cell *matCellDef="let element" class="right">
+              {{ element.mhrPrice }}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedINV; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedINV"></tr>
+        </table>
+      </section>
+      <div class="row">
+        <div class="col center">
+          <mat-paginator
+            #paginatorINV="matPaginator"
+            style="display: flex; justify-content: center"
+            [length]="10"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 25, 50]"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+        <div class="col right mt-3">
+          <a
+            *ngIf="depAtt == 'phar'"
+            (click)="selectPage('INV/Other')"
+            href="#INV/Other"
+            class="btn btn-outline-primary"
+            role="button"
+            aria-pressed="true"
+            ><i class="fas fa-medkit"></i> รายการยาอื่นๆ</a
+          >
+          <a
+            *ngIf="depAtt == 'phar' && job != 'E'"
+            (click)="selectPage('INV/Update')"
+            href="#INV/Update"
+            class="btn btn-outline-primary ml-2"
+            role="button"
+            aria-pressed="true"
+            ><i class="far fa-edit"></i> อัปเดตรายการยา</a
+          >
+          <button
+            type="button"
+            class="btn btn-outline-success ml-2"
+            (click)="
+              exporterINV.exportTable('xlsx', {
+                fileName: 'รายงานยาคงเหลือ' + '_' + dep,
+                sheet: 'sheet1',
+                Props: { Author: 'Talha' }
+              })
+            "
+          >
+            <i class="far fa-file-excel"></i> ส่งออกไฟล์ {{ startDate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+
+<div
+  class="modal fade"
+  id="drugHisModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="drugHisModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="drugHisModalLabel">
+          {{ drugNameHit }} จำนวน <u>{{ drugAmountHit }}</u>
+        </h2>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body m-0 p-0">
+        <section class="table-container" tabindex="0">
+          <table
+            mat-table
+            [dataSource]="dataDrugHit"
+            #sortDrugHit="matSort"
+            matSort
+            class="table table-striped"
+            matSortActive=""
+            matSortDirection="asc"
+            matTableExporter
+            #exporterDrugHit="matTableExporter"
+          >
+            <ng-container matColumnDef="createDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>วันที่</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.createDate }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="depFrom">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ต้นทาง</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.depFrom }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="depTo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ปลายทาง</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.depTo }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="">
+                จำนวน
+              </th>
+              <td mat-cell *matCellDef="let element" class="right">
+                <b *ngIf="element.drugFrom == dep" style="color: red"
+                  >- {{ element.amount }}</b
+                >
+                <b *ngIf="element.drugFrom != dep" style="color: green"
+                  >+ {{ element.amount }}</b
+                >
+                {{ drugSpecHit }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="userName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="">
+                ผู้ปฏิบัติงาน
+              </th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.userName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayDrugHit"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayDrugHit"></tr>
+          </table>
+        </section>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col">
+            <mat-paginator
+              #paginatorDrugHit="matPaginator"
+              style="display: flex; justify-content: center"
+              [length]="10"
+              [pageSize]="10"
+              [pageSizeOptions]="[10, 25, 50]"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+          <div class="col-3 right mt-1">
+            <button
+              type="button"
+              class="btn btn-outline-success"
+              (click)="
+                exporterDrugHit.exportTable('xlsx', {
+                  fileName: 'เส้นทางยา_' + drugNameHit + '_' + dep,
+                  sheet: 'sheet1',
+                  Props: { Author: 'Talha' }
+                })
+              "
+            >
+              <i class="far fa-file-excel"></i> ส่งออกไฟล์ {{ startDate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

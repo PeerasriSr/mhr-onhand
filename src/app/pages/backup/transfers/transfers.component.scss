@@ -1,0 +1,21 @@
+.grid-container {
+  // height: 100%;
+  display: grid;
+  column-gap: 8px;
+  grid-template-columns: 40% auto;
+  // padding: 10px;
+}
+
+.confirm {
+  color: green;
+}
+
+.cancel {
+  color: red;
+}
+
+.depLogin{
+  color: #0d6efd;
+}
+
+

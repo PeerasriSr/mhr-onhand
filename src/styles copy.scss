@@ -1,0 +1,189 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #B1D4E0;
+  // background-image: linear-gradient(#2e8bc0, #d4f1f4);
+}
+
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+table {
+  width: 100%;
+}
+
+.table-container {
+  // height: 553px;
+  overflow: auto;
+  th.mat-header-cell {
+    // background-color: #2e8bc0;
+    // color: #fff;
+    background: linear-gradient(
+      to bottom,
+      lightgray 1%,
+      white 1% 99%,
+      lightgray 99%
+    );
+  }
+}
+
+// td.mat-cell:first-of-type {
+//   padding-left: 0px !important;
+// }
+
+// td.mat-cell:last-of-type {
+//   padding-right: 0px !important;
+// }
+
+th.mat-header-cell,
+td.mat-cell {
+  vertical-align: middle !important;
+  border: 0px !important;
+  padding-left: 8px !important;
+  // min-width: 80px;
+  max-width: 300px;
+}
+
+th.mat-header-cell {
+  text-align: center !important;
+}
+
+.table-striped {
+  .highlightTableColor {
+    color: #2e8bc0;
+    // background-color: #ddebf4;
+  }
+  .highlightTableColor:hover {
+    color: #2e8bc0;
+    // background-color: #ddebf4;
+  }
+}
+
+.mat-sort-header-container {
+  justify-content: center;
+}
+
+.card {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 10px;
+  // box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  // box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+  box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+    rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+  // box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+}
+// .card .card {
+//   margin: 0;
+//   padding: 0;
+//   border: 2px solid gray;
+//   box-shadow: none;
+//   p {
+//     padding-top: 4px;
+//     padding-left: 4px;
+//   }
+// }
+
+.num {
+  text-align: right;
+  font-weight: bold;
+}
+
+#containerHead button,
+#containerHead img,
+#containerHead p,
+#containerHead select,
+#containerHead div,
+#containerHead h3,
+#containerHead h2 {
+  display: inline;
+}
+
+#containerHead .icon {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.edit {
+  cursor: pointer;
+  color: #0d6efd;
+}
+
+.edit:hover {
+  color: grey;
+}
+
+.delete {
+  cursor: pointer;
+  color: red;
+}
+
+.delete:hover {
+  color: grey;
+}
+
+.form-control[readonly] {
+  background-color: #fff;
+  border: 1px solid #edf1f8;
+  // border: none;
+  // border-bottom: 1px solid #ced4da;
+}
+
+.form-select {
+  max-width: 400px;
+}
+
+.mat-form-field-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+.mat-paginator-container {
+  flex-wrap: unset !important;
+}
+.mat-paginator {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.ilink {
+  color: grey;
+  cursor: pointer;
+}
+
+.ilink:hover {
+  color: black;
+}
+
+/* Styles for the active tab label */
+.mat-tab-label.mat-tab-label-active {
+  color: #0000a3;
+  font-weight: bold;
+}
+
+.modal-footer {
+  display: unset;
+}

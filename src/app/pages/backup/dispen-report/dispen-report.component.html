@@ -1,0 +1,197 @@
+<div class="container-fluid">
+  <div class="card">
+    <div class="grid-container grid-dispen">
+      <div class="grid-item">
+        <h2><i class="fas fa-hand-holding-medical"></i> รายงานการจ่ายยา</h2>
+        <div class="row">
+          <mat-form-field class="example-form-field" style="float: left">
+            <!-- <mat-label>เลือกช่วงวันที่</mat-label> -->
+            <mat-date-range-input
+              [formGroup]="campaignOne"
+              [rangePicker]="campaignOnePicker"
+              [comparisonStart]="campaignOne.value.start"
+              [comparisonEnd]="campaignOne.value.end"
+            >
+              <input
+                matStartDate
+                placeholder="วันที่ เริ่มต้น"
+                formControlName="start"
+                (dateChange)="startChange($event)"
+              />
+              <input
+                matEndDate
+                placeholder="สิ้นสุด"
+                formControlName="end"
+                (dateChange)="endChange($event)"
+              />
+            </mat-date-range-input>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="campaignOnePicker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+          </mat-form-field>
+        </div>
+        <div class="list h5" style="cursor: pointer; padding-right: 0.5em">
+          <p
+            class=" {{ selectManu == 1 ? 'select' : '' }}"
+            (click)="changeManu(1)"
+          >
+            <i class="fas fa-hospital-user"></i> คนไข้
+          </p>
+          <p
+            class="{{ selectManu == 2 ? 'select' : '' }}"
+            (click)="changeManu(2)"
+          >
+            <i class="fas fa-pills"></i> ไอเทม
+          </p>
+        </div>
+      </div>
+      <div
+        class="grid-item"
+        style="border-left: 0.1px solid lightgray; padding-left: 0.5em"
+      >
+        <div [hidden]="selectManu != 1">
+          <div class="center">
+            <mat-form-field class="ms-4">
+              <mat-label>คนไข้</mat-label>
+              <select matNativeControl (change)="selectDept($event)">
+                <option *ngFor="let x of listDeptPCU" [value]="x.hn">
+                  &nbsp;{{ x.patientname }}
+                </option>
+              </select>
+            </mat-form-field>
+          </div>
+          <div>
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataPatient"
+                #sortPatient="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="orderitemname">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.orderitemname }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="orderqty">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    จำนวน
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    <b>{{ element.orderqty }}</b> {{ element.orderunitcode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ราคา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.cost }}
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayPatient; sticky: true"
+                ></tr>
+                <tr mat-row *matRowDef="let row; columns: displayPatient"></tr>
+              </table>
+            </section>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-paginator
+                #paginatorPatient="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                [pageSizeOptions]="[10, 25, 50]"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+            <div class="col h6 right space2">
+              รวม <u>{{ listPatient.length }}</u> รายการ
+              <u>{{ patientCost }}</u> บาท
+            </div>
+          </div>
+        </div>
+        <div [hidden]="selectManu != 2">
+          <div class="center">
+            <h2>ไอเทม</h2>
+          </div>
+          <div>
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataItem"
+                #sortItem="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="orderitemname">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.orderitemname }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="orderqty">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    จำนวน
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    <b>{{ element.orderqty }}</b> {{ element.orderunitcode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ราคา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.cost }}
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayItem; sticky: true"
+                ></tr>
+                <tr mat-row *matRowDef="let row; columns: displayItem"></tr>
+              </table>
+            </section>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-paginator
+                #paginatorItem="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                [pageSizeOptions]="[10, 25, 50]"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+
+            <div class="col h6 right space2">
+              รวม <u>{{ listItem.length }}</u> รายการ <u>{{ itemCost }}</u> บาท
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner type="timer"></ngx-spinner>

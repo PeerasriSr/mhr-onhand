@@ -1,0 +1,63 @@
+<ngx-spinner type="timer"></ngx-spinner>
+<div class="container-fluid">
+  <div class="rowtop pt-2 pb-2">
+    <h2>
+      <i class="fa fa-search" aria-hidden="true"></i> ผลการค้นหา '{{ key }}'
+    </h2>
+  </div>
+
+  <div class="example-container">
+    <table
+      mat-table
+      [dataSource]="dataINV"
+      #sortINV="matSort"
+      matSort
+      matSortActive="indexrow"
+      matSortDirection="asc"
+    >
+      <ng-container matColumnDef="indexrow">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ลำดับ</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.indexrow }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="drugCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>รหัสยา</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.drugCode }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="drugName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.drugName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>จำนวนคงเหลือ</th>
+        <td mat-cell *matCellDef="let element" class="right">
+          <b>{{ element.amount }}</b>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ห้องยา</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.Name }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedINV; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedINV"></tr>
+    </table>
+  </div>
+  <div>
+    <mat-paginator
+      #paginatorINV="matPaginator"
+      [length]="10"
+      [pageSize]="10"
+      [pageSizeOptions]="[10, 25, 50]"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>

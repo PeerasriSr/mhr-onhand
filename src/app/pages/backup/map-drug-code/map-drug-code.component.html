@@ -1,0 +1,207 @@
+<ngx-spinner type="timer"></ngx-spinner>
+<div class="container-fluid" *ngIf="role == 'stock'">
+  <div class="card p-2">
+    <div class="row">
+      <div class="col">
+        <h2><i class="fas fa-spell-check"></i> จับคู่โค้ดยา</h2>
+      </div>
+      <div class="col center">
+        <mat-form-field>
+          <input matInput (keyup)="drugFilter($event)" #input />
+          <mat-placeholder>ค้นหา : </mat-placeholder>
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="col right">
+        <!-- <button
+          type="button"
+          class="btn btn-outline-primary ms-2"
+          (click)="mapCode()"
+        >
+          <i class="fas fa-plus"></i> เพิ่มการจับคู่
+        </button> -->
+      </div>
+    </div>
+    <div>
+      <section class="table-container" tabindex="0">
+        <table
+          mat-table
+          [dataSource]="dataINVCode"
+          #sortINVCode="matSort"
+          matSort
+          class="table table-striped"
+          matSortActive=""
+          matSortDirection="desc"
+          matTableExporter
+          #exporterDrugCode="matTableExporter"
+        >
+          <ng-container matColumnDef="WORKING_CODE">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>INV</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.WORKING_CODE }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="HIS_CODE">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>HomC</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.HIS_CODE }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="DRUG_NAME">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.DRUG_NAME }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>แก้ไข</th>
+            <td mat-cell *matCellDef="let element" class="center">
+              <i class="far fa-edit edit" (click)="editCode(element)"></i>
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayINVCode; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: displayINVCode"></tr>
+        </table>
+      </section>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button
+          type="button"
+          class="btn btn-outline-primary mt-2"
+          (click)="goBack()"
+        >
+          <i class="fas fa-undo"></i> กลับ
+        </button>
+      </div>
+      <div class="col-5 center">
+        <mat-paginator
+          #paginatorINVCode="matPaginator"
+          style="display: flex; justify-content: center"
+          [length]="10"
+          [pageSize]="10"
+          [pageSizeOptions]="[10, 25, 50]"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      </div>
+      <div class="col right">
+        <button
+          type="button"
+          class="btn btn-outline-success mt-2"
+          (click)="
+            exporterDrugCode.exportTable('xlsx', {
+              fileName: 'จับคู่โค้ดยา',
+              sheet: 'sheet1',
+              Props: { Author: 'Talha' }
+            })
+          "
+        >
+          <i class="far fa-file-excel"></i> ส่งออกไฟล์
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="mapCode"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="mapCodeLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title m-0" id="mapCodeLabel">จับคู่โค้ดยา</h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="cancelMatching()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <form
+            [formGroup]="searchInv"
+            (ngSubmit)="searchInv.valid ? submitISearchInv() : ''"
+          >
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="INV Code"
+                formControlName="invCode"
+                [readonly]="mapType"
+              />
+              <button
+                type="submit"
+                class="btn btn-primary form-group"
+                *ngIf="!mapType"
+              >
+                ค้นหาโค้ด INV
+              </button>
+            </div>
+          </form>
+        </div>
+        <div>
+          <h3>INV : {{ invDrug.name }}</h3>
+        </div>
+        <div>
+          <form
+            [formGroup]="searchHomc"
+            (ngSubmit)="searchHomc.valid ? submitISearchHomc() : ''"
+          >
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="homc Code"
+                formControlName="homCode"
+              />
+              <button type="submit" class="btn btn-primary form-group">
+                ค้นหาโค้ด HomC
+              </button>
+            </div>
+          </form>
+        </div>
+        <div>
+          <h3>HomC : {{ homcDrug.name }}</h3>
+        </div>
+      </div>
+      <div class="modal-footer right">
+        <button type="button" class="btn btn-danger" (click)="removeMap()">
+          ยกเลิกการจับคู่
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="cancelMatching()"
+        >
+          ปิด
+        </button>
+
+        <button
+          *ngIf="invDrug.code && homcDrug.code"
+          type="button"
+          class="btn btn-primary"
+          (click)="submitMatching()"
+        >
+          จับคู่
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

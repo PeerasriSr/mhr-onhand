@@ -1,0 +1,306 @@
+<ngx-spinner type="timer"></ngx-spinner>
+<div class="container-fluid">
+  <div class="row rowtop">
+    <div class="col">
+      <h2><i class="fas fa-file-upload"></i> นำเข้าไฟล์ INVS</h2>
+    </div>
+    <div class="col pt-2 pb-2">
+      <div class="input-group" *ngIf="role === 'stock'">
+        <div class="custom-file" style="max-width: 300px">
+          <input
+            type="file"
+            class="custom-file-input pointer"
+            id="inputGroupFile03"
+            aria-describedby="inputGroupFileAddon03"
+            (change)="addfile($event)"
+            #myAddfile
+          />
+          <label class="custom-file-label" for="inputGroupFile03"
+            >เลือกไฟล์</label
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col right">
+      <!-- <a class="btn btn-outline-primary" href="#MapCode" role="button"
+          >จับคู่โค้ดยา</a
+        > -->
+    </div>
+  </div>
+  <div class="example-container mat-elevation-z8">
+    <table
+      mat-table
+      [dataSource]="dataINVno"
+      #sortINVno="matSort"
+      matSort
+      matSortActive="drugName"
+      matSortDirection="asc"
+    >
+      <ng-container matColumnDef="inv_no">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>เลขที่ใบเบิก</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.inv_no }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ผู้ปฏิบัติงาน</th>
+        <td mat-cell *matCellDef="let element" class="">
+          {{ element.userName }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>วันที่</th>
+        <td mat-cell *matCellDef="let element" class="center">
+          {{ element.date }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef>เวลา</th>
+        <td mat-cell *matCellDef="let element" class="center">
+          {{ element.time }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element" class="center">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm mr-2"
+            (click)="viewDetialINV(element)"
+          >
+            <i class="far fa-file-alt"></i>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedINVno; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedINVno"></tr>
+    </table>
+  </div>
+  <div>
+    <mat-paginator
+      #paginatorINVno="matPaginator"
+      [length]="10"
+      [pageSize]="10"
+      [pageSizeOptions]="[10, 25, 50]"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="invHistory"
+  tabindex="-1"
+  data-backdrop="static"
+  data-keyboard="false"
+  aria-labelledby="invHistoryLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="invHistoryLabel">
+          <i class="far fa-file-alt"></i> {{ fileName }}
+          <label *ngIf="findInvNo == true" style="color: red"
+            >(นำเข้าไฟล์นี้แล้ว)</label
+          >
+        </h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="clearInputExcel()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="">
+          <table
+            mat-table
+            [dataSource]="dataFile"
+            #sortFile="matSort"
+            matSort
+            matSortActive="drugCode"
+            matSortDirection="asc"
+          >
+            <ng-container matColumnDef="inv_code">
+              <th mat-header-cell *matHeaderCellDef>โค้ด Inv</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.inv_code }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="drugCode">
+              <th mat-header-cell *matHeaderCellDef>โค้ด HomC</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.drugCode }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="drugName">
+              <th mat-header-cell *matHeaderCellDef>ชื่อสามัญ/ชื่อการค้า</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.drugName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="REQU_QTY">
+              <th mat-header-cell *matHeaderCellDef>จน.ขอ</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.REQU_QTY }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="DISP_QTY">
+              <th mat-header-cell *matHeaderCellDef>จน.จ่าย</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.DISP_QTY }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="STK_Event">
+              <th mat-header-cell *matHeaderCellDef>คงคลัง</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.STK_Event }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="LOT_NO">
+              <th mat-header-cell *matHeaderCellDef>Lot no.</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.LOT_NO }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="EXP_Date">
+              <th mat-header-cell *matHeaderCellDef>Exp. Date</th>
+              <td mat-cell *matCellDef="let element" class="">
+                {{ element.EXP_Date }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedFile"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; let element; columns: displayedFile"
+              class="{{ !element.drugCode ? 'red' : '' }}"
+            ></tr>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <mat-paginator
+          #paginatorFile="matPaginator"
+          [length]="10"
+          [pageSize]="10"
+          [pageSizeOptions]="[10, 25, 50]"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+          (click)="returnINV()"
+          *ngIf="role === 'stock' && findInvNo == true && invRemove"
+        >
+          ยกเลิกไฟล์เบิก
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="submitINV()"
+          *ngIf="findInvNo == false"
+        >
+          นำเข้าไฟล์เบิก
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          ปิด
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="drugNotMatch"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="drugNotMatchLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="drugNotMatchLabel">
+          รายการยานำเข้าไม่สำเร็จ
+        </h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table
+          mat-table
+          [dataSource]="dataDNM"
+          #sortDNM="matSort"
+          matSort
+          class=""
+          matSortActive="inv_code"
+          matSortDirection="asc"
+          matTableExporter
+          #exporterDNM="matTableExporter"
+        >
+          <ng-container matColumnDef="inv_code">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>รห้ส</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.inv_code }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="drugName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อยา</th>
+            <td mat-cell *matCellDef="let element" class="">
+              {{ element.drugName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="LOT_NO">
+            <th mat-header-cell *matHeaderCellDef>LOT_NO</th>
+            <td mat-cell *matCellDef="let element" class="center">
+              {{ element.LOT_NO }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="EXP_Date">
+            <th mat-header-cell *matHeaderCellDef class="not-line">EXP_Date</th>
+            <td mat-cell *matCellDef="let element" class="center not-line">
+              {{ element.EXP_Date }}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayDNM"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayDNM"></tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <div class="pt-2 pb-2">
+          <button
+            type="button"
+            class="btn btn-primary mr-2"
+            (click)="
+              exporterDNM.exportTable('xlsx', {
+                fileName: 'รายการยานำเข้าไม่สำเร็จ' + fileName,
+                sheet: 'sheet1',
+                Props: { Author: 'Talha' }
+              })
+            "
+          >
+            ส่งออกไฟล์
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            ปิด
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

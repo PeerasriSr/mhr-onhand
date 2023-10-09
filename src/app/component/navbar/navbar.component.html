@@ -1,0 +1,154 @@
+<div (click)="timerOut(1)">
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#Inventory">
+      <img src="/OnHand/assets/img/logo_login.png" />
+      <!-- <img src="/assets/img/logo_login.png" /> -->
+      {{ depName }}</a
+    >
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div
+      class="collapse navbar-collapse"
+      id="navbarSupportedContent"
+      *ngIf="depType === 'phar'"
+    >
+      <ul class="navbar-nav mr-auto">
+        <!-- <li class="nav-item active">
+          <a class="nav-link" href="#"
+            >Home <span class="sr-only">(current)</span></a
+          >
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link" href="#Inventory">หน้าหลัก</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-toggle="dropdown"
+            aria-expanded="false"
+          >
+            การจัดการ
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#ImportInv">นำเข้าไฟล์ INVS</a>
+            <a class="dropdown-item" href="#MapCode">จับคู่โค้ดยา INVS</a>
+            <a class="dropdown-item" href="#DrugSetting">ตั้งค่าโค้ดยา</a>
+            <a class="dropdown-item" href="#TransferIn">นำยาเข้า ห้องยา</a>
+            <a class="dropdown-item" href="#TransferOut">นำยาออก ห้องยา</a>
+            <!-- <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a> -->
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-toggle="dropdown"
+            aria-expanded="false"
+          >
+            รายงาน
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#Inventory">ยาคงเหลือรวม</a>
+            <a class="dropdown-item" href="#ReportClassify"
+              >ยาบริจาค/ยาคืน/อื่นๆ</a
+            >
+            <a class="dropdown-item" href="#ReportDrugExp">ยาหมดอายุ</a>
+            <a class="dropdown-item" href="#ReportTransfer">การขอยา</a>
+            <!-- <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a> -->
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#Appointment">คาดการยา</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link disabled">Disabled</a>
+        </li> -->
+      </ul>
+
+      <form
+        [formGroup]="searchGroup"
+        (ngSubmit)="searchGroup.valid ? submitISearch() : ''"
+        class="mr-2"
+      >
+        <div class="input-group" style="max-width: 300px">
+          <input
+            type="text"
+            class="form-control with-icon"
+            placeholder="ค้นหายาบน OnHand"
+            aria-label="ค้นหา"
+            aria-describedby="basic-addon1"
+            formControlName="key"
+          />
+          <div class="input-icon">
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+      </form>
+
+      <div class="dropdown pointer">
+        <div
+          class="dropdown-toggle"
+          data-toggle="dropdown"
+          aria-expanded="false"
+          style="color: #0d6efd"
+        >
+          <i class="fas fa-user"></i> {{ user }}
+        </div>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" (click)="LogOut()">ออกจากระบบ</a>
+        </div>
+      </div>
+    </div>
+    <div
+      class="collapse navbar-collapse"
+      id="navbarSupportedContent"
+      *ngIf="depType === 'r93'"
+    >
+      <ul class="navbar-nav mr-auto">
+        <!-- <li class="nav-item active">
+          <a class="nav-link" href="#"
+            >Home <span class="sr-only">(current)</span></a
+          >
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link" href="#Abundant">ลงข้อมูล</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#Abundant/Report">รายงาน</a>
+        </li>
+      </ul>
+
+      <div class="dropdown pointer">
+        <div
+          class="dropdown-toggle"
+          data-toggle="dropdown"
+          aria-expanded="false"
+          style="color: #0d6efd"
+        >
+          <i class="fas fa-user"></i> {{ user }}
+        </div>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" (click)="LogOut()">ออกจากระบบ</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

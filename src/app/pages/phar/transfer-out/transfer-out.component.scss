@@ -1,0 +1,33 @@
+.confirm {
+  color: green;
+}
+
+.cancel {
+  color: red;
+}
+
+.grid1 {
+  display: grid;
+  column-gap: 8px;
+  grid-template-columns: auto 30%;
+  // padding: 10px;
+}
+
+.grid2 {
+  display: grid;
+  column-gap: 4px;
+  grid-template-columns: 160px auto;
+  // padding: 10px;
+}
+
+.import {
+  // color: #fff;
+  background-color: #ef9492;
+  // background: linear-gradient(to bottom, #b6212f, #fceeef);
+}
+
+.headList {
+  margin: 0;
+  background-color: #fff;
+  color: #000;
+}

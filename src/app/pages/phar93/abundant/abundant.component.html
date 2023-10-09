@@ -1,0 +1,454 @@
+<div class="container-fluid">
+  <div class="card">
+    <div class="row">
+      <div class="col-2" style="border-right: 1px solid lightgrey">
+        <mat-form-field appearance="outline">
+          <mat-label>HN</mat-label>
+          <input matInput #swiperHN (keyup.enter)="sendHN(swiperHN.value)" />
+          <div matSuffix style="font-size: 17.5px" *ngIf="swiperHN.value">
+            <i
+              class="fas fa-times ilink"
+              (click)="refesh(); swiperHN.value = ''"
+            ></i>
+          </div>
+        </mat-form-field>
+        <table class="table table-striped">
+          <thead>
+            <tr class="center">
+              <td colspan="2" style="font-size: 72px">
+                <i class="fas fa-user-circle"></i>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>HN</th>
+              <td>{{ patientNo }}</td>
+            </tr>
+            <tr>
+              <th>ชื่อ-สกุล</th>
+              <td>{{ patientName }}</td>
+            </tr>
+            <tr>
+              <th>วันเกิด</th>
+              <td>{{ patientBD }}</td>
+            </tr>
+            <tr>
+              <th>อายุ</th>
+              <td>{{ patientAge }}</td>
+            </tr>
+            <tr>
+              <th>เพศ</th>
+              <td>{{ patientSex }}</td>
+            </tr>
+            <tr>
+              <th>ภูมิลำเนา</th>
+              <td>{{ patientAdd }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <div class="" [hidden]="showVNDrug == true || listVN.length == 0">
+          <h3><i class="fas fa-history"></i> ประวัติการเข้า รพ.</h3>
+
+          <section class="table-container" tabindex="0">
+            <table
+              mat-table
+              [dataSource]="dataVN"
+              #sortNV="matSort"
+              matSort
+              class="table table-striped"
+              matSortActive=""
+              matSortDirection="asc"
+            >
+              <ng-container matColumnDef="VD">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  วันที่เข้า รพ.
+                </th>
+                <td mat-cell *matCellDef="let element" class="center">
+                  {{ element.visitDate }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="VN">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  ครั้งที่มาติดต่อ
+                </th>
+                <td mat-cell *matCellDef="let element" class="center">
+                  {{ element.vn }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="option">
+                <th mat-header-cell *matHeaderCellDef>เลือก</th>
+                <td mat-cell *matCellDef="let element" class="center">
+                  <div *ngIf="element.vd_check == 0">
+                    <i class="fas fa-edit edit" (click)="sendVN(element)"></i>
+                    <!-- <i
+                      class="fas fa-search ilink"
+                      (click)="sendVN(element)"
+                    ></i> -->
+                  </div>
+                  <div *ngIf="element.vd_check != 0">
+                    <i class="far fa-check-circle h5" style="color: green"></i>
+                  </div>
+                </td>
+              </ng-container>
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayVN; sticky: true"
+              ></tr>
+              <tr mat-row *matRowDef="let row; columns: displayVN"></tr>
+            </table>
+          </section>
+          <div class="row">
+            <div class="col">
+              <mat-paginator
+                #paginatorVN="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                [pageSizeOptions]="[10, 25, 50]"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+        <div [hidden]="showVNDrug == false">
+          <div class="row">
+            <div class="col space">
+              <h3>
+                <i class="far fa-calendar-check"></i> วันที่เข้า รพ.
+                <u>{{ visitDate }}</u> <i class="far fa-clipboard"></i> VN
+                <u>{{ patientVN }}</u>
+                <i class="fas fa-laptop-medical"></i> สิทธิ์การรักษา
+                <u>{{ patientRig }}</u>
+              </h3>
+            </div>
+          </div>
+
+          <div class="grid-container">
+            <div class="grid-item chanel" style="padding-top: 0.4em">
+              <div>
+                <section class="table-container" tabindex="0">
+                  <table
+                    mat-table
+                    [dataSource]="dataVnDrug"
+                    class="table table-striped"
+                  >
+                    <ng-container matColumnDef="drugName">
+                      <th mat-header-cell *matHeaderCellDef>รายการยา</th>
+                      <td mat-cell *matCellDef="let element" class="">
+                        {{ element.drugName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="orderqty">
+                      <th mat-header-cell *matHeaderCellDef>จำนวนแพทย์สั่ง</th>
+                      <td mat-cell *matCellDef="let element" class="right">
+                        {{ element.orderqty }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="refund">
+                      <th mat-header-cell *matHeaderCellDef>จำนวนเหลือใช้</th>
+                      <td
+                        mat-cell
+                        *matCellDef="let element; let i = index"
+                        class="right"
+                      >
+                        <mat-form-field [style.width.px]="50">
+                          <input
+                            matInput
+                            [(ngModel)]="element.refund"
+                            type="number"
+                          />
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="unit">
+                      <th mat-header-cell *matHeaderCellDef>หน่วย</th>
+                      <td mat-cell *matCellDef="let element" class="center">
+                        {{ element.dosageunitcode }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="reason">
+                      <th mat-header-cell *matHeaderCellDef>หมายเหตุ</th>
+                      <td
+                        mat-cell
+                        *matCellDef="let element; let i = index"
+                        class="center"
+                      >
+                        <mat-form-field [style.width.px]="300">
+                          <select
+                            matNativeControl
+                            (change)="selectReason($event, i)"
+                          >
+                            <option
+                              *ngFor="let x of listReason"
+                              [value]="x.reasonCode"
+                            >
+                              {{ x.reasonName }}
+                            </option>
+                          </select>
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+
+                    <tr
+                      mat-header-row
+                      *matHeaderRowDef="displayVnDrug; sticky: true"
+                    ></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let row; columns: displayVnDrug"
+                      class="{{ row.refund > 0 ? 'chooses' : '' }}"
+                    ></tr>
+                  </table>
+                </section>
+              </div>
+              <div class="row">
+                <!-- <div class="col center">
+                  <h4 class="mt-3">ทั้งหมด {{ listVnDrug.length }} รายการ</h4>
+                </div> -->
+                <!-- <div class="col">
+                    <mat-paginator
+                      #paginatorVnDrug="matPaginator"
+                      style="display: flex; justify-content: center"
+                      [length]="10"
+                      [pageSize]="10"
+                      [pageSizeOptions]="[10, 25, 50]"
+                      showFirstLastButtons
+                    >
+                    </mat-paginator>
+                  </div> -->
+                <div class="col center mt-2 mb-2">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop"
+                  >
+                    <i class="fas fa-plus"></i> เพิ่มรายการยา
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="grid-item chanel">
+              <div class="px-2">
+                <div>
+                  <i class="fas fa-user-md h5"></i>
+                  <mat-form-field class="">
+                    <mat-label>แพทย์</mat-label>
+                    <select matNativeControl (change)="selectDocc($event)">
+                      <option selected></option>
+                      <option *ngFor="let x of listDocc" [value]="x.docCode">
+                        {{ x.docName }}
+                        {{ x.docLName }}
+                      </option>
+                    </select>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <i class="fas fa-clinic-medical h5"></i>
+                  <mat-form-field class="">
+                    <mat-label>คลินิก</mat-label>
+                    <select matNativeControl (change)="selectDept($event)">
+                      <option selected></option>
+                      <option *ngFor="let x of listDept" [value]="x.deptCode">
+                        {{ x.deptEn }} -
+                        {{ x.deptTh }}
+                      </option>
+                    </select>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <i class="fas fa-user-nurse h5"></i>
+                  <mat-form-field class="">
+                    <mat-label>เภสัชกร</mat-label>
+                    <select matNativeControl (change)="selectPhar($event)">
+                      <option selected></option>
+                      <option *ngFor="let x of listPhar" [value]="x.id">
+                        {{ x.userName }}
+                      </option>
+                    </select>
+                  </mat-form-field>
+                </div>
+                <div class="center">
+                  
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    (click)="submitAbundant()"
+                  >
+                    <i class="far fa-save"></i> บันทึกข้อมูล
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary pl-4 pr-4 mt-2"
+                    (click)="clear()"
+                  >
+                    <i class="fas fa-undo"></i> ย้อนกลับ
+                  </button>
+                </div>
+              </div>
+
+              <!-- <div class="right">
+                <button
+                  style="margin-top: 28.3em; margin-right: 0.5em"
+                  type="button"
+                  class="btn btn-light"
+                  (click)="submitAbundant()"
+                >
+                  <i class="far fa-save"></i> บันทึกข้อมูล
+                </button>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <form (ngSubmit)="submitAddDrug()">
+      <div class="modal-content">
+        <div class="modal-header pt-1 pb-1" style="border-bottom: none">
+          <!-- <h5 class="modal-title" id="staticBackdropLabel">
+              <i class="fas fa-pills"></i> เลือกยา
+            </h5> -->
+          <mat-form-field>
+            <input matInput (keyup)="drugFilter($event)" #input />
+            <mat-placeholder>ค้นหา : ชื่อยา</mat-placeholder>
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body pt-0 pb-0">
+          <div class="">
+            <section class="table-container" tabindex="0">
+              <table
+                mat-table
+                [dataSource]="dataAllDrug"
+                #sortAlldrug="matSort"
+                matSort
+                class="table table-striped"
+                matSortActive=""
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ลำดับ
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="invCode">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    รหัสใช้เบิก
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.invCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugCode">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    รหัสยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="miniSpec">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ปริมาณ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.miniSpec }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    จำนวนคงเหลือ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="num">
+                    {{ element.amount }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="option">
+                  <th mat-header-cell *matHeaderCellDef>เลือก</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element; let i = index"
+                    class="center"
+                  >
+                    <div *ngIf="element.chooses == false">
+                      <i
+                        class="far fa-square ilink"
+                        (click)="chooses(element.rowNum)"
+                      ></i>
+                    </div>
+                    <div *ngIf="element.chooses == true">
+                      <i class="far fa-check-square"></i>
+                    </div>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayAllDrug; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayAllDrug"
+                  class="{{ row.chooses == true ? 'chooses' : '' }}"
+                ></tr>
+              </table>
+            </section>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-paginator
+                #paginatorAllDrug="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                [pageSizeOptions]="[10, 25, 50]"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer p-1">
+          <!-- <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                <i class="far fa-times-circle"></i> ยกเลิก
+              </button> -->
+          <button type="submit" class="btn btn-light" data-bs-dismiss="modal">
+            <i class="far fa-check-circle"></i> ตกลง
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
