@@ -160,21 +160,16 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef class="sticky"></th>
         <td mat-cell *matCellDef="let element" class="center">
-          <button
-            type="button"
-            class="btn btn-primary btn-sm mr-1"
+          <span
+            class="ibtn blue"
             (click)="editAmount(element)"
             *ngIf="role === 'stock'"
           >
             <i class="far fa-edit"></i>
-          </button>
-          <button
-            type="button"
-            class="btn btn-warning btn-sm"
-            (click)="drugHistory(element)"
-          >
+          </span>
+          <span class="ibtn yellow" (click)="drugHistory(element)">
             <i class="far fa-question-circle"></i>
-          </button>
+          </span>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedINV; sticky: true"></tr>
@@ -183,7 +178,7 @@
   </div>
 
   <div class="row rowbottom">
-    <div class="col ">
+    <div class="col">
       <button
         type="button"
         class="btn btn-light btns"

@@ -47,9 +47,9 @@
       </mat-form-field>
     </div>
     <div class="col-md-auto">
-      <button type="button" class="btn btn-light btns" (click)="getInvType()">
+      <span class="ibtn blue" (click)="getInvType()">
         <i class="fas fa-search"></i>
-      </button>
+      </span>
     </div>
 
     <div class="col right">
@@ -129,13 +129,9 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
               <td mat-cell *matCellDef="let element" class="center">
-                <button
-                  type="button"
-                  class="btn btn-warning btn-sm"
-                  (click)="depHistory(element, 1)"
-                >
+                <span class="ibtn yellow" (click)="depHistory(element, 1)">
                   <i class="far fa-question-circle"></i>
-                </button>
+                </span>
               </td>
             </ng-container>
             <tr
@@ -192,7 +188,6 @@
             matTableExporter
             #exporter2="matTableExporter"
           >
-            
             <ng-container matColumnDef="invCode">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 รหัสใช้เบิก
@@ -248,13 +243,9 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
               <td mat-cell *matCellDef="let element" class="center">
-                <button
-                  type="button"
-                  class="btn btn-warning btn-sm"
-                  (click)="depHistory(element, 2)"
-                >
+                <span class="ibtn yellow" (click)="depHistory(element, 2)">
                   <i class="far fa-question-circle"></i>
-                </button>
+                </span>
               </td>
             </ng-container>
 
@@ -312,7 +303,6 @@
             matTableExporter
             #exporter3="matTableExporter"
           >
-         
             <ng-container matColumnDef="userName">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 ผู้ปฏิบัติงาน

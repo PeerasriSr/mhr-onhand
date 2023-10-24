@@ -25,6 +25,7 @@ export class TransferOutComponent implements OnInit {
   id: any;
   job: any;
   dep: any;
+  depType: any;
   group: any;
   depIn: any;
   depName: any;
@@ -38,9 +39,6 @@ export class TransferOutComponent implements OnInit {
     name: '',
     amount: '',
   };
-
-  listDrugSetting: Array<any> = [];
-  listDrugStore: Array<any> = [];
 
   listHity: Array<any> = [];
   dataHity: any = null;
@@ -79,6 +77,7 @@ export class TransferOutComponent implements OnInit {
     private spinner: NgxSpinnerService
   ) {
     this.dep = sessionStorage.getItem('dep');
+    this.depType = sessionStorage.getItem('depType');
     this.id = sessionStorage.getItem('id');
     this.job = sessionStorage.getItem('่job');
     this.group = sessionStorage.getItem('group');
@@ -87,11 +86,11 @@ export class TransferOutComponent implements OnInit {
     this.endDate = moment(this.campaignOne.value.end).format('YYYY-MM-DD');
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getHittory();
     this.getFromDep();
-    this.getDrugSetting();
-    this.getDrugBarcode();
+    await this.getDrugBarcode();
+    await this.getAllDrug();
   }
 
   campaignOne = new FormGroup({
@@ -142,110 +141,44 @@ export class TransferOutComponent implements OnInit {
       });
   };
 
-  getDrugStore = async () => {
-    this.listDrugStore = [];
+  hitFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataHity.filter = filterValue.trim().toLowerCase();
+  }
+
+
+
+  getAllDrug = async () => {
+    this.spinner.show();
+    let arr: Array<any> = [];
+    this.listAllDrug = [];
+    this.dataAllDrug = [];
     this.http
-      .get(`${environment.apiUrl}listDrugStore`)
+      .get(`${environment.apiUrl}OnHand/allDrugHomeC`)
       .toPromise()
       .then((val: any) => {
         if (val['rowCount'] > 0) {
-          // console.log(val);
-          this.listDrugStore = val['result'];
-          // console.log(this.listDrugStore);
+          // console.log(val);       
+          this.listAllDrug = val['result'];
         }
       })
       .catch((reason) => {
         console.log(reason);
         this.services.alert('error', 'ไม่สามารถเขื่อมต่อเชิฟเวอร์ได้', '');
       })
-      .finally(() => {});
+      .finally(() => {
+        this.spinner.hide();
+        // console.log(this.listAllDrug)
+        this.dataAllDrug = new MatTableDataSource(this.listAllDrug);
+        this.dataAllDrug.sort = this.sortAlldrug;
+        this.dataAllDrug.paginator = this.paginatorAllDrug;
+      });
   };
 
-  reverse = async (el: any) => {
-    let invCode = '';
-    this.listDrugStore.forEach((c) => {
-      if (c.HIS_CODE === this.formTransfer.code) {
-        invCode = c.MED_CODE;
-      }
-    });
-    let data = new FormData();
-    data.append('depOut', el.dep_to);
-    data.append('depIn', el.dep_from);
-    data.append('drugCode', el.drugCode);
-    data.append('amount', el.amount);
-    data.append('iden', this.id);
-    data.append('trans_no', el.trans_no);
-    // data.forEach((value, key) => {
-    //   console.log(key + " : " + value);
-    // });
-    if (this.job != 'E') {
-      // console.log(el);
-      this.services
-        .confirm(
-          'warning',
-          'ยืนยัน การยกเลิกจำนวน',
-          el.drugName + ' = ' + el.amount + ' ' + el.miniUnit
-        )
-        .then((val: any) => {
-          if (val) {
-            this.http
-              .post(`${environment.apiUrl}OnHand/onhandOut`, data)
-              .toPromise()
-              .then((val: any) => {
-                // console.log(val);
-              })
-              .catch((reason) => {
-                console.log(reason);
-                this.services.alert(
-                  'error',
-                  'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
-                  'โปรดติดต่อผู้ดูแลระบบ'
-                );
-              })
-              .finally(() => {
-                this.http
-                  .post(`${environment.apiUrl}OnHand/onhandIn`, data)
-                  .toPromise()
-                  .then((val: any) => {
-                    // console.log(val);
-                  })
-                  .catch((reason) => {
-                    console.log(reason);
-                    this.services.alert(
-                      'error',
-                      'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
-                      'โปรดติดต่อผู้ดูแลระบบ'
-                    );
-                  })
-                  .finally(() => {
-                    this.http
-                      .post(`${environment.apiUrl}OnHand/reverseTransfer`, data)
-                      .toPromise()
-                      .then((val: any) => {
-                        // console.log(val);
-                      })
-                      .catch((reason) => {
-                        console.log(reason);
-                        this.services.alert(
-                          'error',
-                          'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
-                          'โปรดติดต่อผู้ดูแลระบบ'
-                        );
-                      })
-                      .finally(() => {
-                        this.getHittory();
-                        this.services.alertTimer('success', 'คืนยาสำเสร็จ');
-                      });
-                  });
-              });
-          }
-        });
-    }
-  };
-
-  hitFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataHity.filter = filterValue.trim().toLowerCase();
+  drugFilter(event: Event) {
+    // console.log(event);
+    this.filterValue = (event.target as HTMLInputElement).value;
+    this.dataAllDrug.filter = this.filterValue.trim().toLowerCase();
   }
 
   getFromDep = async () => {
@@ -267,73 +200,6 @@ export class TransferOutComponent implements OnInit {
       })
       .finally(() => {});
   };
-
-  getDrugSetting() {
-    this.listDrugSetting = [];
-    let key = new FormData();
-    key.append('groupCode', this.group);
-    this.http
-      .post(`${environment.apiUrl}drugHide`, key)
-      .toPromise()
-      .then((val: any) => {
-        if (val['rowCount'] > 0) {
-          this.listDrugSetting = val['result'];
-          // console.log(this.listDrugSetting);
-        }
-      })
-      .catch((reason) => {
-        console.log(reason);
-        this.services.alert('error', 'ไม่สามารถเขื่อมต่อเชิฟเวอร์ได้', '');
-      })
-      .finally(() => {
-        this.getAllDrug();
-      });
-  }
-
-  getAllDrug = async () => {
-    this.spinner.show();
-    let arr: Array<any> = [];
-    this.listAllDrug = [];
-    this.dataAllDrug = [];
-    this.http
-      .get(`${environment.apiUrl}OnHand/allDrugHomeC`)
-      .toPromise()
-      .then((val: any) => {
-        if (val['rowCount'] > 0) {
-          // console.log(val);
-          arr = val['result'];
-          arr.forEach((el) => {
-            let hide = false;
-            this.listDrugSetting.forEach((h) => {
-              if (el.drugCode === h.drugCode) {
-                // console.log(el.drugCode);
-                hide = true;
-              }
-            });
-            if (!hide) {
-              this.listAllDrug.push(el);
-            }
-          });
-        }
-      })
-      .catch((reason) => {
-        console.log(reason);
-        this.services.alert('error', 'ไม่สามารถเขื่อมต่อเชิฟเวอร์ได้', '');
-      })
-      .finally(() => {
-        this.spinner.hide();
-        // console.log(this.listAllDrug)
-        this.dataAllDrug = new MatTableDataSource(this.listAllDrug);
-        this.dataAllDrug.sort = this.sortAlldrug;
-        this.dataAllDrug.paginator = this.paginatorAllDrug;
-      });
-  };
-
-  drugFilter(event: Event) {
-    // console.log(event);
-    this.filterValue = (event.target as HTMLInputElement).value;
-    this.dataAllDrug.filter = this.filterValue.trim().toLowerCase();
-  }
 
   getDrugBarcode = async () => {
     this.listBarcode = [];
@@ -471,23 +337,16 @@ export class TransferOutComponent implements OnInit {
   }
 
   transfered() {
-    let invCode = '';
-    this.listDrugStore.forEach((c) => {
-      if (c.HIS_CODE === this.formTransfer.code) {
-        invCode = c.MED_CODE;
-      }
-    });
     let data = new FormData();
     data.append('depOut', this.dep);
     data.append('depIn', this.formTransfer.dep);
     data.append('drugCode', this.formTransfer.code);
-    data.append('invCode', invCode);
     data.append('amount', this.formTransfer.amount);
     data.append('iden', this.id);
     // data.forEach((value, key) => {
     //   console.log(key + ' : ' + value);
     // });
-    if (this.formTransfer.type === 'phar') {
+    if (this.depType === 'phar') {
       this.http
         .post(`${environment.apiUrl}inventoryOut`, data)
         .toPromise()
@@ -541,4 +400,84 @@ export class TransferOutComponent implements OnInit {
       this.swiperBar.nativeElement.focus();
     }, 500);
   }
+
+  reverse = async (el: any) => {
+    // console.log(el);
+    let data = new FormData();
+    data.append('depOut', el.dep_to);
+    data.append('depIn', el.dep_from);
+    data.append('drugCode', el.drugCode);
+    data.append('amount', el.amount);
+    data.append('iden', this.id);
+    data.append('trans_no', el.trans_no);
+    // data.forEach((value, key) => {
+    //   console.log(key + " : " + value);
+    // });
+    if (this.job != 'E') {
+      // console.log(el);
+      this.services
+        .confirm(
+          'warning',
+          'ยืนยัน การยกเลิกจำนวน',
+          el.drugName + ' = ' + el.amount + ' ' + el.miniUnit
+        )
+        .then((val: any) => {
+          if (val) {
+            if (el.toType === 'phar') {
+              this.http
+                .post(`${environment.apiUrl}OnHand/onhandOut`, data)
+                .toPromise()
+                .then((val: any) => {
+                  // console.log(val);
+                })
+                .catch((reason) => {
+                  console.log(reason);
+                  this.services.alert(
+                    'error',
+                    'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+                    'โปรดติดต่อผู้ดูแลระบบ'
+                  );
+                })
+                .finally(() => {});
+            }
+            if (el.fromType === 'phar') {
+              this.http
+                .post(`${environment.apiUrl}OnHand/onhandIn`, data)
+                .toPromise()
+                .then((val: any) => {
+                  // console.log(val);
+                })
+                .catch((reason) => {
+                  console.log(reason);
+                  this.services.alert(
+                    'error',
+                    'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+                    'โปรดติดต่อผู้ดูแลระบบ'
+                  );
+                })
+                .finally(() => {});
+            }
+
+            this.http
+              .post(`${environment.apiUrl}OnHand/reverseTransfer`, data)
+              .toPromise()
+              .then((val: any) => {
+                // console.log(val);
+              })
+              .catch((reason) => {
+                console.log(reason);
+                this.services.alert(
+                  'error',
+                  'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+                  'โปรดติดต่อผู้ดูแลระบบ'
+                );
+              })
+              .finally(() => {
+                this.getHittory();
+                this.services.alertTimer('success', 'คืนยาสำเสร็จ');
+              });
+          }
+        });
+    }
+  };
 }

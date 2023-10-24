@@ -15,14 +15,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class DrugSettingComponent implements OnInit {
   group: any;
 
-  listDrugSet: Array<any> = [];
-  listINVCode: Array<any> = [];
+  // listDrugSet: Array<any> = [];
+  // listINVCode: Array<any> = [];
 
   listAllDrug: Array<any> = [];
   dataAllDrug: any = null;
   @ViewChild('sortAlldrug') sortAlldrug!: MatSort;
   @ViewChild('paginatorAllDrug') paginatorAllDrug!: MatPaginator;
-  displayAllDrug: string[] = ['drugCode', 'invCode', 'drugName', 'chooses'];
+  displayAllDrug: string[] = ['drugCode', 'invCode', 'drugName', 'setting'];
 
   constructor(
     public services: AppService,
@@ -36,71 +36,19 @@ export class DrugSettingComponent implements OnInit {
     this.getDrugSetting();
   }
 
-  getDrugSetting() {
+  getDrugSetting = async () => {
     this.spinner.show();
-    this.listDrugSet = [];
+    this.listAllDrug = [];
+    this.dataAllDrug = [];
     let key = new FormData();
     key.append('group', this.group);
-    this.listINVCode = [];
-    this.http
-      .get(`${environment.apiUrl}listINVcode`)
-      .toPromise()
-      .then((val: any) => {
-        if (val['rowCount'] > 0) {
-          // console.log(val);
-          this.listINVCode = val['result'];
-          // console.log(this.listINVCode);
-        }
-      })
-      .catch((reason) => {
-        console.log(reason);
-        this.services.alert('error', 'ไม่สามารถเขื่อมต่อเชิฟเวอร์ได้', '');
-      })
-      .finally(() => {});
     this.http
       .post(`${environment.apiUrl}drugSetting`, key)
       .toPromise()
       .then((val: any) => {
         if (val['rowCount'] > 0) {
-          this.listDrugSet = val['result'];
-          // console.log(this.listDrugSet);
-        }
-      })
-      .catch((reason) => {
-        console.log(reason);
-        this.services.alert('error', 'ไม่สามารถเขื่อมต่อเชิฟเวอร์ได้', '');
-      })
-      .finally(() => {
-        this.spinner.hide();
-        this.getAllDrug();
-      });
-  }
-
-  getAllDrug = async () => {
-    this.spinner.show();
-    this.listAllDrug = [];
-    this.dataAllDrug = [];
-    this.http
-      .get(`${environment.apiUrl}OnHand/allDrugHomeC`)
-      .toPromise()
-      .then((val: any) => {
-        if (val['rowCount'] > 0) {
           // console.log(val);
           this.listAllDrug = val['result'];
-          this.listAllDrug.forEach((el) => {
-            el.chooses = 'N';
-            this.listDrugSet.forEach((h) => {
-              if (el.drugCode === h.drugCode || el.inv_code === h.inv_code) {
-                // console.log(el.drugCode);
-                el.chooses = 'Y';
-              }
-            });
-            this.listINVCode.forEach((c) => {
-              if (c.HIS_CODE === el.drugCode) {
-                el.img = c.MED_CODE;
-              }
-            });
-          });
         }
       })
       .catch((reason) => {
@@ -123,28 +71,44 @@ export class DrugSettingComponent implements OnInit {
   }
 
   switch(e: any) {
-    console.log(e);
-    if (e.chooses === 'Y') {
-      this.services
-        .confirm('warning', 'ปิดใช้งาน', e.drugCode + ' ' + e.drugName)
-        .then((val: any) => {
-          if (val) {
-          }
-        });
-    } else {
+    // console.log(e);
+    let key = new FormData();
+    key.append('group', this.group);
+    key.append('drugCode', e.drugCode);
+    if (e.setting === 'N') {
       this.services
         .confirm('warning', 'เปิดใช้งาน', e.drugCode + ' ' + e.drugName)
         .then((val: any) => {
           if (val) {
-            let key = new FormData();
-            key.append('group', this.group);
-            key.append('inv_code', e.img);
-            key.append('drugCode', e.drugCode);
             this.http
-              .post(`${environment.apiUrl}insertDrugSet`, key)
+              .post(`${environment.apiUrl}deleteDrugHide`, key)
               .toPromise()
               .then((val: any) => {
-                console.log(val);
+                // console.log(val);
+              })
+              .catch((reason) => {
+                console.log(reason);
+                this.services.alert(
+                  'error',
+                  'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+                  'โปรดติดต่อผู้ดูแลระบบ'
+                );
+              })
+              .finally(() => {
+                this.getDrugSetting();
+              });
+          }
+        });
+    } else {
+      this.services
+        .confirm('warning', 'ปิดใช้งาน', e.drugCode + ' ' + e.drugName)
+        .then((val: any) => {
+          if (val) {
+            this.http
+              .post(`${environment.apiUrl}insertDrugHide`, key)
+              .toPromise()
+              .then((val: any) => {
+                // console.log(val);
               })
               .catch((reason) => {
                 console.log(reason);

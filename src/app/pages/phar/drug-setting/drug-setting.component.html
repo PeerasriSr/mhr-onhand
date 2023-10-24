@@ -33,7 +33,7 @@
       <ng-container matColumnDef="invCode">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>โค้ด INV</th>
         <td mat-cell *matCellDef="let element" class="">
-          {{ element.img }}
+          {{ element.invCode }}
         </td>
       </ng-container>
       <ng-container matColumnDef="drugName">
@@ -42,12 +42,12 @@
           {{ element.drugName }}
         </td>
       </ng-container>
-      <ng-container matColumnDef="chooses">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>เปิดใช้งาน</th>
+      <ng-container matColumnDef="setting">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>สถานะ</th>
         <td mat-cell *matCellDef="let element" class="center">
           <div class="pointer toggle" (click)="switch(element)">
-            <i class="fas fa-toggle-on green" *ngIf="element.chooses === 'Y'"></i>
-            <i class="fas fa-toggle-off grey" *ngIf="element.chooses === 'N'"></i>
+            <i class="fas fa-toggle-on green" *ngIf="element.setting === 'Y'"></i>
+            <i class="fas fa-toggle-off red" *ngIf="element.setting === 'N'"></i>
           </div>
         </td>
       </ng-container>

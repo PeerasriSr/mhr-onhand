@@ -47,14 +47,13 @@
       <ng-container matColumnDef="edit">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element" class="center">
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
+          <span
+            class="ibtn blue"
             (click)="editCode(element)"
             *ngIf="role === 'stock'"
           >
             <i class="far fa-edit"></i>
-          </button>
+          </span>
         </td>
       </ng-container>
 
@@ -132,22 +131,15 @@
                   formControlName="invCode"
                   [readonly]="mapType"
                 />
-                <button
-                  type="submit"
-                  class="btn btn-primary form-group"
-                  *ngIf="!mapType"
-                >
+                <span class="ibtn blue" *ngIf="!mapType">
                   <i class="fas fa-search"></i>
-                </button>
+                </span>
               </div>
             </form>
             <h3>{{ invDrug.name }}</h3>
           </div>
           <div class="col" style="border-left: 1px solid lightgray">
-            <form
-              [formGroup]="searchHomc"
-              (ngSubmit)="searchHomc.valid ? submitISearchHomc() : ''"
-            >
+            <form [formGroup]="searchHomc" (ngSubmit)="submitISearchHomc()">
               <div class="input-group mt-2">
                 <h2>HomC</h2>
                 <input
@@ -156,11 +148,12 @@
                   placeholder="homc Code"
                   formControlName="homCode"
                 />
-                <button type="submit " class="btn btn-light form-group btns ml-2">
+                <span class="ibtn blue m-2" (click)="submitISearchHomc()">
                   <i class="fas fa-search"></i>
-                </button>
+                </span>
               </div>
             </form>
+
             <h3>{{ homcDrug.name }}</h3>
           </div>
         </div>

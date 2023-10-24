@@ -99,6 +99,18 @@ th.mat-header-cell.sticky {
   cursor: pointer;
 }
 
+.ibtn {
+  cursor: pointer;
+  margin: 0 2px;
+  i {
+    font-size: 1.25rem;
+  }
+}
+
+.ibtn:hover {
+  color: grey;
+}
+
 .red {
   color: #dc3545;
   .mat-cell {
@@ -115,7 +127,7 @@ th.mat-header-cell.sticky {
 }
 
 .yellow {
-  color: #fad02c;
+  color: #ffc107;
 }
 
 .oran {

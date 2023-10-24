@@ -58,14 +58,13 @@
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
             <td mat-cell *matCellDef="let element" class="num">
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
+              <span
+                class="ibtn red"
                 (click)="editAmount(element)"
                 *ngIf="role == 'stock'"
               >
                 <i class="fas fa-trash-alt"></i>
-              </button>
+              </span>
             </td>
           </ng-container>
           <tr
@@ -172,14 +171,13 @@
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
             <td mat-cell *matCellDef="let element" class="num">
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
+              <span
+                class="ibtn red"
                 (click)="editAmount(element)"
                 *ngIf="role == 'stock'"
               >
                 <i class="fas fa-trash-alt"></i>
-              </button>
+              </span>
             </td>
           </ng-container>
           <tr

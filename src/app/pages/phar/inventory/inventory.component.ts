@@ -26,7 +26,6 @@ export class InventoryComponent implements OnInit {
   endDate: any;
   role: any;
 
-  
   listPosition: Array<any> = [];
 
   listINV: Array<any> = [];
@@ -97,10 +96,11 @@ export class InventoryComponent implements OnInit {
         // console.log(val);
         if (val['rowCount'] > 0) {
           this.listINV = val['result'];
-          this.ceil();
           // console.log(this.listINV);
           this.listINV.forEach((el) => {
             // console.log(el.EXP_Date);
+            el.invPrice > 0 ? (el.invPrice = this.match_ceil(el.invPrice)) : '';
+            el.mhrPrice > 0 ? (el.mhrPrice = this.match_ceil(el.mhrPrice)) : '';
             if (el.LOT_NO) {
               const lotArray: string[] = el.LOT_NO.split(',').map(
                 (item: string) => item.trim()
@@ -115,12 +115,6 @@ export class InventoryComponent implements OnInit {
                 el.LOT_NO.push(lotArray[i] + ' / ' + expArray[i]);
               });
             }
-            // this.listDrugHide.forEach((h, i) => {
-            //   if (el.drugCode === h.drugCode || el.inv_code === h.inv_code) {
-            //     console.log(el.drugCode)
-
-            //   }
-            // });
             if (this.listPosition.length > 0) {
               this.listPosition.forEach((p) => {
                 if (el.drugCode === p.drugCode) {
@@ -157,17 +151,11 @@ export class InventoryComponent implements OnInit {
       });
   };
 
-  ceil() {
-    this.listINV.forEach((el) => {
-      if (parseInt(el.invPrice) > 0) {
-        el.invPrice = Math.ceil(el.invPrice);
-        el.invPrice = el.invPrice.toLocaleString('en-US');
-      }
-      if (parseInt(el.mhrPrice) > 0) {
-        el.mhrPrice = Math.ceil(el.mhrPrice);
-        el.mhrPrice = el.mhrPrice.toLocaleString('en-US');
-      }
-    });
+  match_ceil(e: any) {
+    let x = e;
+    let y = Math.ceil(x);
+    let z = y.toLocaleString('en-US');
+    return z;
   }
 
   INVFilter(event: Event) {
@@ -181,7 +169,7 @@ export class InventoryComponent implements OnInit {
 
   getPosition = async () => {
     this.listPosition = [];
-  
+
     let key = new FormData();
     key.append('group', this.group);
     if (this.dep == 'W8' || this.dep == 'W7') {
@@ -255,16 +243,14 @@ export class InventoryComponent implements OnInit {
       let depOut: any;
       let depIn: any;
 
-      if (amountNew > e.amount) {
-        editAmount = amountNew - e.amount;
-        // console.log(editAmount);
-        depOut = 'EDIT';
-        depIn = this.dep;
-      } else {
-        editAmount = e.amount - amountNew;
-        // console.log(editAmount);
+      if (parseInt(e.amount) > parseInt(amountNew)) {
         depOut = this.dep;
         depIn = 'EDIT';
+        editAmount = parseInt(e.amount) - parseInt(amountNew);
+      } else if (parseInt(e.amount) < parseInt(amountNew)) {
+        depOut = 'EDIT';
+        depIn = this.dep;
+        editAmount = parseInt(amountNew) - parseInt(e.amount);
       }
 
       let data = new FormData();
@@ -273,7 +259,7 @@ export class InventoryComponent implements OnInit {
       data.append('iden', this.id);
       data.append('depCode', this.dep);
       data.append('drugCode', e.drugCode);
-      data.append('amount', editAmount);
+      data.append('editAmount', editAmount);
       data.append('amountNew', amountNew);
       this.http
         .post(`${environment.apiUrl}/OnHand/insertTransfer`, data)
@@ -323,7 +309,7 @@ export class InventoryComponent implements OnInit {
       .post(`${environment.apiUrl}drugHistory`, key)
       .toPromise()
       .then((val: any) => {
-        // console.log(val);
+        console.log(val);
         if (val['rowCount'] > 0) {
           this.listDrugHit = val['result'];
           // console.log(this.listDrugHit);

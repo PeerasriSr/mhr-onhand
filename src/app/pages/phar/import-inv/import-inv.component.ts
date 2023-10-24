@@ -378,7 +378,7 @@ export class ImportInvComponent implements OnInit {
   checkInvNo = async () => {
     // console.log(this.listAllINVNo);
     this.listAllINVNo.forEach((el) => {
-      if (el.inv_no == this.fileName) {
+      if (el.inv_no === this.fileName) {
         this.findInvNo = true;
       }
     });
@@ -414,18 +414,14 @@ export class ImportInvComponent implements OnInit {
               );
             })
             .finally(() => {});
-          let req_amount: any = [];
-          let dis_amount: any = [];
+
           // console.log(this.filelist)
           let i = 0;
           let interval: any;
           // console.log(this.filelist.length);
           await this.filelist.forEach((e, j) => {
-            // เช็คโค้ดที่จับคู่ไม่ได้
-            if (e.drugCode === null) {
-              this.drugNotMatch.push(e);
-              e.drugCode = '';
-            }
+            let req_amount: any = [];
+            let dis_amount: any = [];
             // set ข้อมูล inv
             let key = new FormData();
             key.append('inv_no', inv_no);
@@ -469,6 +465,7 @@ export class ImportInvComponent implements OnInit {
                 );
               })
               .finally(() => {});
+
             if (e.LOT_NO != '-') {
               this.http
                 .post(`${environment.apiUrl}updateLOT`, key)
@@ -487,25 +484,116 @@ export class ImportInvComponent implements OnInit {
                 .finally(() => {});
             }
 
-            this.http
-              .post(`${environment.apiUrl}updateInventory`, key)
-              .toPromise()
-              .then((val: any) => {
-                // console.log(val);
-              })
-              .catch((reason) => {
-                console.log(e);
-                console.log(reason);
-                this.services.alert(
-                  'error',
-                  'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
-                  'โปรดติดต่อผู้ดูแลระบบ'
-                );
-              })
-              .finally(() => {
-                i++;
-                // console.log(i);
-              });
+            // เช็คโค้ดที่จับคู่ไม่ได้
+            if (e.drugCode === null) {
+              this.drugNotMatch.push(e);
+              i++;
+              // e.drugCode = '';
+              // key.append('drugCode', e.drugCode);
+              // this.http
+              //   .post(`${environment.apiUrl}insertNewINV`, key)
+              //   .toPromise()
+              //   .then((val: any) => {
+              //     // console.log(val);
+              //   })
+              //   .catch((reason) => {
+              //     console.log(reason);
+              //     this.services.alert(
+              //       'error',
+              //       'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+              //       'โปรดติดต่อผู้ดูแลระบบ'
+              //     );
+              //   })
+              //   .finally(() => {
+              //     i++;
+              //     // console.log(i);
+              //   });
+            } else {
+              this.http
+                .post(`${environment.apiUrl}insertNewINV`, key)
+                .toPromise()
+                .then((val: any) => {
+                  // console.log(val);
+                })
+                .catch((reason) => {
+                  console.log(reason);
+                  this.services.alert(
+                    'error',
+                    'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+                    'โปรดติดต่อผู้ดูแลระบบ'
+                  );
+                })
+                .finally(() => {
+                  i++;
+                  // console.log(i);
+                });
+              // let x = [];
+              // this.http
+              //   .post(`${environment.apiUrl}checkInvNow`, key)
+              //   .toPromise()
+              //   .then((val: any) => {
+              //     // console.log(val);
+              //     if (val['rowCount'] > 0) {
+              //       x = val['result'];
+              //       let up = new FormData();
+              //       up.append('up_invCode', x[0]['invCode']);
+              //       up.append('up_drugCode', x[0]['drugCode']);
+              //       up.append('amount', req_amount);
+              //       up.append('depCode', this.dep);
+              //       up.append('inv_code', e.inv_code);
+              //       up.append('drugCode', e.drugCode);
+              //       // up.forEach((value, up) => {
+              //       //   console.log(up + ' : ' + value);
+              //       // });
+              //       this.http
+              //         .post(`${environment.apiUrl}updateNewINV`, up)
+              //         .toPromise()
+              //         .then((val: any) => {
+              //           // console.log(val);
+              //         })
+              //         .catch((reason) => {
+              //           console.log(reason);
+              //           this.services.alert(
+              //             'error',
+              //             'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+              //             'โปรดติดต่อผู้ดูแลระบบ'
+              //           );
+              //         })
+              //         .finally(() => {
+              //           i++;
+              //           // console.log(i);
+              //         });
+              //     } else {
+              //       this.http
+              //         .post(`${environment.apiUrl}insertNewINV`, key)
+              //         .toPromise()
+              //         .then((val: any) => {
+              //           // console.log(val);
+              //         })
+              //         .catch((reason) => {
+              //           console.log(reason);
+              //           this.services.alert(
+              //             'error',
+              //             'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+              //             'โปรดติดต่อผู้ดูแลระบบ'
+              //           );
+              //         })
+              //         .finally(() => {
+              //           i++;
+              //           // console.log(i);
+              //         });
+              //     }
+              //   })
+              //   .catch((reason) => {
+              //     console.log(reason);
+              //     this.services.alert(
+              //       'error',
+              //       'ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้',
+              //       'โปรดติดต่อผู้ดูแลระบบ'
+              //     );
+              //   })
+              //   .finally(() => {});
+            }
 
             interval = setInterval(() => {
               if (this.filelist.length === i) {
@@ -681,8 +769,7 @@ export class ImportInvComponent implements OnInit {
   };
 
   viewDetialINV = async (data: any) => {
-    this.filelist = [];
-    this.dataFile = [];
+    this.clearInputExcel();
     // console.log(data);
     this.fileName = data.inv_no;
     let invData = new FormData();
@@ -716,8 +803,9 @@ export class ImportInvComponent implements OnInit {
         );
       })
       .finally(() => {
-        this.checkInvNo();
-        data.date === this.formattedDate ? (this.invRemove = true) : false;
+        this.findInvNo = true;
+        this.invRemove = true;
+        // data.date === this.formattedDate ? (this.invRemove = true) : false;
         _window.$(`#invHistory`).modal('show');
       });
   };
@@ -890,4 +978,9 @@ export class ImportInvComponent implements OnInit {
     } else {
     }
   };
+  
+  reloadPage(){
+    window.location.reload();
+  }
+  
 }

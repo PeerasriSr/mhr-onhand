@@ -12,23 +12,21 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./search-drug.component.scss'],
 })
 export class SearchDrugComponent implements OnInit {
-   key: any = '';
-   selectDrugName: any;
+  key: any = '';
+  selectDrugName: any;
 
-   selectedRowIndex: any;
-   listINV: Array<any> = [];
-   dataINV: any = null;
+  selectedRowIndex: any;
+  listINV: Array<any> = [];
+  dataINV: any = null;
   @ViewChild('sortINV') sortINV!: MatSort;
   @ViewChild('paginatorINV') paginatorINV!: MatPaginator;
-   displayedINV: string[] = [
-    'indexrow',
+  displayedINV: string[] = [
+    // 'indexrow',
     'drugCode',
     'drugName',
     'Name',
     'amount',
   ];
-
-
 
   constructor(public services: AppService, private http: HttpClient) {}
 
@@ -36,7 +34,7 @@ export class SearchDrugComponent implements OnInit {
     setInterval(this.check, 1000);
   }
 
-   check = async () => {
+  check = async () => {
     // console.log(sessionStorage.getItem("search"));
     if (this.key != sessionStorage.getItem('search')) {
       this.selectDrugName = [];
@@ -46,12 +44,12 @@ export class SearchDrugComponent implements OnInit {
     }
   };
 
-   searchDrug = async () => {
+  searchDrug = async () => {
     this.listINV = [];
     let dataKey = new FormData();
     dataKey.append('key', this.key);
     this.http
-      .post(`${environment.apiUrl}OnHand/searchDrug`, dataKey)
+      .post(`${environment.apiUrl}searchDrug`, dataKey)
       .toPromise()
       .then((val: any) => {
         // console.log(val);

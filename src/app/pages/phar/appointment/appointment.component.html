@@ -173,7 +173,7 @@
     <div class="col" *ngIf="formattedDateNum < enDateNum">
       <button
         type="button"
-        class="btn btn-light"
+        class="btn btn-light btns"
         (click)="
           exporterINV.exportTable('xls', {
             fileName: 'เบิกยา(' + this.unitName + ')(' + this.enDate + ')',
@@ -182,7 +182,7 @@
           })
         "
       >
-        <i class="fas fa-file-download blue"></i> สร้างไฟล์เบิก - {{ unitName }}
+        <i class="fas fa-file-download blue"></i> ไฟล์บิก {{ unitName }}
       </button>
     </div>
     <div class="col" *ngIf="formattedDateNum === enDateNum">
@@ -213,7 +213,7 @@
     <div class="col" *ngIf="formattedDateNum > enDateNum">
       <button
         type="button"
-        class="btn btn-light"
+        class="btn btn-light btns"
         (click)="
           exporterSelect.exportTable('xlsx', {
             fileName: 'คาดการยา_' + enDate,

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImportInvComponent } from './import-inv.component';
+import { ImportInvComponent } from './ImportInvComponent';
 
 describe('ImportInvComponent', () => {
   let component: ImportInvComponent;
